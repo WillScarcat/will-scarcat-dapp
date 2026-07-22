@@ -24,7 +24,7 @@ export default function Hero() {
   }
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center px-4 sm:px-6 pt-20 pb-12 max-w-6xl mx-auto">
+    <section className="relative min-h-screen flex flex-col justify-center px-4 sm:px-6 pt-10 pb-12 max-w-6xl mx-auto">
       <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-12 items-center">
 
         {/* Left — text (60%) */}

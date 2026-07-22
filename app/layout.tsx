@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import Providers from './providers'
-import Navbar from '@/components/Navbar'
+import Sidebar from '@/components/Sidebar'
 import BottomNav from '@/components/BottomNav'
 import PullToRefresh from '@/components/PullToRefresh'
 import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration'
@@ -45,11 +45,15 @@ export default function RootLayout({
       </head>
       <body>
         <Providers>
-          <Navbar />
-          <main className="pb-16 md:pb-0">{children}</main>
-          <BottomNav />
-          <PullToRefresh />
-          <ServiceWorkerRegistration />
+          <div className="flex min-h-screen">
+            <Sidebar />
+            <div className="flex-1 min-w-0 lg:ml-14">
+              <main className="pb-16 lg:pb-0">{children}</main>
+              <BottomNav />
+              <PullToRefresh />
+              <ServiceWorkerRegistration />
+            </div>
+          </div>
         </Providers>
       </body>
     </html>

@@ -15,7 +15,7 @@ export default function BottomNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="bottom-nav fixed bottom-0 left-0 right-0 z-50 border-t border-wc-border bg-wc-black md:hidden">
+    <nav className="bottom-nav fixed bottom-0 left-0 right-0 z-50 border-t border-wc-border bg-wc-black lg:hidden">
       <div className="flex">
         {TABS.map(({ label, href, icon: Icon }) => {
           const base = href.split('#')[0]
