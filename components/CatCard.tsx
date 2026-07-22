@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
 import { Cat as CatIcon } from 'lucide-react'
 import type { Cat } from '@/lib/contracts'
 
@@ -33,10 +32,11 @@ export default function CatCard({
 
   return (
     <div
-      className="relative border bg-wc-card p-4 transition-all duration-200 hover:border-wc-green/40"
+      className="glass-card glass-card-hover relative p-4 transition-all duration-200"
       style={{
-        borderColor: isSelected ? cat.color : '#2a2a2a',
+        borderColor: isSelected ? cat.color : 'rgba(255,255,255,0.08)',
         borderWidth: isSelected ? 2 : 1,
+        boxShadow: isSelected ? `0 0 20px ${cat.color}22` : undefined,
       }}
     >
       {/* CHOSEN badge */}
@@ -51,25 +51,26 @@ export default function CatCard({
       {/* Avatar + name */}
       <div className="mb-3 flex items-center gap-3">
         <div
-          className="h-12 w-12 overflow-hidden flex items-center justify-center border shrink-0"
-          style={{ borderColor: cat.color + '44', background: cat.color + '0d' }}
+          className="h-12 w-12 overflow-hidden flex items-center justify-center shrink-0 rounded-xl"
+          style={{
+            border: `1px solid rgba(255,255,255,0.1)`,
+            background: cat.color + '0d',
+          }}
         >
           {imgError ? (
             <CatIcon className="w-6 h-6" style={{ color: cat.color }} />
           ) : (
-            <Image
+            <img
               src={cat.img}
               alt={cat.name}
-              width={48}
-              height={48}
               className="object-cover w-full h-full"
               onError={() => setImgError(true)}
             />
           )}
         </div>
         <div>
-          <div className="font-bold text-wc-text text-sm">{cat.name}</div>
-          <div className="wc-mono wc-upper text-[10px]" style={{ color: cat.color }}>
+          <div className="font-semibold text-white text-sm">{cat.name}</div>
+          <div className="wc-mono text-[10px] font-bold tracking-widest uppercase" style={{ color: cat.color }}>
             ${cat.ticker}
           </div>
         </div>
@@ -79,11 +80,14 @@ export default function CatCard({
       {weightPct !== undefined && (
         <div className="mb-3">
           <div className="flex justify-between mb-1">
-            <span className="wc-mono text-[9px] text-wc-muted wc-upper">Weight</span>
-            <span className="wc-mono text-[9px]" style={{ color: cat.color }}>{weightPct}%</span>
+            <span className="text-[9px] font-medium uppercase tracking-wider text-gray-600">Weight</span>
+            <span className="text-[9px] font-bold" style={{ color: cat.color }}>{weightPct}%</span>
           </div>
-          <div className="h-0.5 bg-wc-border w-full">
-            <div className="h-0.5 transition-all duration-700" style={{ width: `${weightPct}%`, background: cat.color }} />
+          <div className="h-1 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
+            <div
+              className="h-full rounded-full transition-all duration-700"
+              style={{ width: `${weightPct}%`, background: cat.color }}
+            />
           </div>
         </div>
       )}
@@ -92,9 +96,12 @@ export default function CatCard({
       {showActions && (
         <>
           {claimable !== undefined && (
-            <div className="mb-3 border border-wc-border px-3 py-2 text-xs bg-wc-black">
-              <span className="wc-mono text-wc-muted wc-upper text-[9px]">Claimable </span>
-              <span className="wc-mono text-wc-text">{claimable} {cat.ticker}</span>
+            <div
+              className="mb-3 px-3 py-2 text-xs"
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
+            >
+              <span className="text-[9px] font-medium uppercase tracking-wider text-gray-600">Claimable </span>
+              <span className="wc-mono text-white text-[11px]">{claimable} {cat.ticker}</span>
             </div>
           )}
 
@@ -103,8 +110,12 @@ export default function CatCard({
               <button
                 onClick={onChoose}
                 disabled={isChoosingPending}
-                className="flex-1 py-1.5 text-[10px] font-bold wc-mono wc-upper transition-colors disabled:opacity-50 border"
-                style={{ background: cat.color + '14', color: cat.color, borderColor: cat.color + '44' }}
+                className="flex-1 py-1.5 text-[10px] font-bold wc-mono uppercase tracking-wider transition-colors disabled:opacity-50"
+                style={{
+                  background: cat.color + '14',
+                  color: cat.color,
+                  border: `1px solid ${cat.color}33`,
+                }}
               >
                 {isChoosingPending ? 'Choosing…' : 'Choose'}
               </button>
@@ -114,7 +125,8 @@ export default function CatCard({
               <button
                 onClick={onClaim}
                 disabled={isClaimPending || !hasReward}
-                className="flex-1 py-1.5 text-[10px] font-bold wc-mono wc-upper bg-wc-green text-black transition-colors disabled:opacity-40 hover:bg-[#b8e600]"
+                className="flex-1 py-1.5 text-[10px] font-black wc-mono uppercase tracking-wider text-black transition-all disabled:opacity-40 hover:scale-[1.02]"
+                style={{ background: '#CCFF00' }}
               >
                 {isClaimPending ? 'Claiming…' : `Claim ${cat.ticker}`}
               </button>

@@ -6,32 +6,42 @@ export default function CatWeightChart({ holdersCount }: { holdersCount: number 
   const { stats, isLoading } = useCatStats()
 
   return (
-    <div className="border border-wc-border bg-wc-card p-5">
-      <div className="flex items-center justify-between mb-4">
-        <span className="wc-mono wc-upper text-[10px] font-bold text-wc-muted">Cat Weight</span>
-        <span className="wc-mono text-[10px] text-wc-muted">{holdersCount.toLocaleString()} holders</span>
+    <div className="glass-card p-5">
+      <div className="flex items-center justify-between mb-5">
+        <span className="text-[11px] font-bold uppercase tracking-widest text-gray-500">Cat Weight</span>
+        <span className="text-[10px] text-gray-600">{holdersCount.toLocaleString()} holders</span>
       </div>
 
       {isLoading ? (
         <div className="space-y-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-4 bg-wc-border animate-pulse" />
+            <div
+              key={i}
+              className="h-4 rounded animate-pulse"
+              style={{ background: 'rgba(255,255,255,0.05)', animationDelay: `${i * 60}ms` }}
+            />
           ))}
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-3.5">
           {stats.map(({ cat, pct }) => (
             <div key={cat.id} className="flex items-center gap-3">
-              <div className="w-16 wc-mono wc-upper text-[10px] shrink-0" style={{ color: cat.color }}>
+              <div
+                className="w-16 text-[10px] font-bold uppercase tracking-widest shrink-0"
+                style={{ color: cat.color }}
+              >
                 {cat.ticker}
               </div>
-              <div className="flex-1 h-1 bg-wc-border overflow-hidden">
+              <div
+                className="flex-1 h-1.5 rounded-full overflow-hidden"
+                style={{ background: 'rgba(255,255,255,0.06)' }}
+              >
                 <div
-                  className="h-full transition-all duration-700"
+                  className="h-full rounded-full transition-all duration-1000 ease-out"
                   style={{ width: `${pct}%`, background: cat.color }}
                 />
               </div>
-              <div className="w-8 text-right wc-mono text-[10px] text-wc-muted shrink-0">{pct}%</div>
+              <div className="w-8 text-right text-[10px] font-bold text-gray-500 shrink-0">{pct}%</div>
             </div>
           ))}
         </div>

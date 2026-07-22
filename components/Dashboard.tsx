@@ -4,35 +4,99 @@ import { WILL_TOKEN } from '@/lib/contracts'
 import PriceTicker from './PriceTicker'
 import CatWeightChart from './CatWeightChart'
 
+function formatPrice(p: number): string {
+  if (!p) return '—'
+  // Show enough decimal places to see 2–3 significant figures
+  if (p < 1e-9) return `<$0.000000001`
+  if (p < 0.01) {
+    const s = p.toFixed(12).replace(/0+$/, '').replace(/\.$/, '')
+    return `$${s}`
+  }
+  if (p < 1) return `$${p.toFixed(4)}`
+  return `$${p.toLocaleString('en', { maximumFractionDigits: 2 })}`
+}
+
+function formatVolume(v: number): string {
+  if (v >= 1_000_000) return `$${(v / 1_000_000).toFixed(2)}M`
+  if (v >= 1_000) return `$${(v / 1_000).toFixed(1)}K`
+  return `$${v.toFixed(2)}`
+}
+
 export default async function Dashboard() {
   const [price, tokenStats] = await Promise.all([
     getPurrPrice(),
     getTokenStats(WILL_TOKEN),
   ])
 
+  const up = price.priceChange24h >= 0
+
+  const CARDS = [
+    {
+      value: formatPrice(parseFloat(price.price)),
+      label: 'Price',
+      sub: '$PURR / WETH',
+      accent: true,
+      delay: '0ms',
+    },
+    {
+      value: `${up ? '+' : ''}${price.priceChange24h.toFixed(2)}%`,
+      label: '24h Change',
+      sub: 'vs yesterday',
+      accent: false,
+      up,
+      delay: '80ms',
+    },
+    {
+      value: tokenStats.holders.toLocaleString(),
+      label: 'Holders',
+      sub: '$WILL wallets',
+      accent: false,
+      delay: '160ms',
+    },
+    {
+      value: formatVolume(price.volume24h),
+      label: 'Volume 24h',
+      sub: 'DEX activity',
+      accent: false,
+      delay: '240ms',
+    },
+  ]
+
   return (
     <div className="px-4">
       <div className="mx-auto max-w-6xl space-y-3">
-        {/* Stonkbrokers-style stat cards — 2×2 on mobile, 4 across on md */}
-        <div className="grid grid-cols-2 gap-px md:grid-cols-4 bg-wc-border border border-wc-border">
-          {[
-            { value: `$${parseFloat(price.price).toExponential(3)}`, label: 'Price', sub: '$PURR / WETH' },
-            {
-              value: `${price.priceChange24h >= 0 ? '+' : ''}${price.priceChange24h.toFixed(2)}%`,
-              label: '24h Change',
-              sub: 'vs yesterday',
-            },
-            { value: tokenStats.holders.toLocaleString(), label: 'Holders', sub: '$WILL wallets' },
-            {
-              value: price.volume24h >= 1000 ? `$${(price.volume24h / 1000).toFixed(1)}K` : `$${price.volume24h.toFixed(2)}`,
-              label: 'Volume 24h',
-              sub: 'DEX activity',
-            },
-          ].map(card => (
-            <div key={card.label} className="bg-wc-card p-4 text-center">
-              <div className="wc-mono text-xl font-bold text-wc-text">{card.value}</div>
-              <div className="wc-mono wc-upper text-[10px] font-bold text-wc-green mt-1">{card.label}</div>
-              <div className="text-wc-muted text-[10px] mt-0.5">{card.sub}</div>
+        {/* Stat cards */}
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+          {CARDS.map((card) => (
+            <div
+              key={card.label}
+              className="glass-card glass-card-hover p-4 text-center glow-green"
+              style={{
+                animation: `counter-up 0.5s ease-out ${card.delay} both`,
+              }}
+            >
+              <div
+                className="text-xl font-black leading-none"
+                style={{
+                  color: card.accent
+                    ? '#CCFF00'
+                    : card.up === true
+                    ? '#4ade80'
+                    : card.up === false
+                    ? '#f87171'
+                    : '#ffffff',
+                  fontVariantNumeric: 'tabular-nums',
+                }}
+              >
+                {card.value}
+              </div>
+              <div
+                className="text-[10px] font-bold uppercase tracking-widest mt-1.5"
+                style={{ color: 'rgba(204,255,0,0.7)' }}
+              >
+                {card.label}
+              </div>
+              <div className="text-[10px] text-gray-600 mt-0.5">{card.sub}</div>
             </div>
           ))}
         </div>

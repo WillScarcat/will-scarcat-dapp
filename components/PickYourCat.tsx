@@ -1,25 +1,26 @@
 import CatCard from './CatCard'
 import { CATS } from '@/lib/contracts'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 
 export default function PickYourCat() {
   return (
     <section id="cats" className="px-4">
       <div className="mx-auto max-w-6xl">
-        <div className="grid grid-cols-2 gap-px md:grid-cols-3 bg-wc-border border border-wc-border">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
           {CATS.map(cat => (
-            <div key={cat.id} className="bg-wc-black">
-              <CatCard cat={cat} />
-            </div>
+            <CatCard key={cat.id} cat={cat} />
           ))}
         </div>
 
-        <div className="mt-4 text-center">
-          <a
+        <div className="mt-6 text-center">
+          <Link
             href="/dapp"
-            className="inline-block bg-wc-green text-black px-8 py-3 font-bold text-sm wc-mono wc-upper hover:bg-[#b8e600] transition-colors"
+            className="inline-flex items-center gap-2 px-8 py-3.5 font-black text-sm uppercase tracking-wide text-black transition-all hover:bg-white hover:scale-[1.02]"
+            style={{ background: '#CCFF00' }}
           >
-            Connect Wallet to Choose
-          </a>
+            Connect Wallet to Choose <ArrowRight size={14} />
+          </Link>
         </div>
       </div>
     </section>

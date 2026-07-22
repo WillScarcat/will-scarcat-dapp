@@ -8,6 +8,12 @@ import { useState } from 'react'
 
 const SHORT_CA = `${WILL_TOKEN.slice(0, 6)}...${WILL_TOKEN.slice(-4)}`
 
+const BADGES = [
+  { label: '● LIVE', accent: true },
+  { label: '6 CATS' },
+  { label: 'PURR · ROBINHOOD CHAIN' },
+]
+
 export default function Hero() {
   const [copied, setCopied] = useState(false)
 
@@ -18,96 +24,147 @@ export default function Hero() {
   }
 
   return (
-    <section className="min-h-screen flex flex-col justify-center px-4 sm:px-6 pt-20 pb-8 max-w-6xl mx-auto">
-      {/* Live status row */}
-      <div className="flex items-center gap-2 mb-6">
-        <LivePing />
-        <span className="wc-mono wc-upper text-[10px] text-wc-muted tracking-widest">
-          Robinhood Chain · Chain ID 4663
-        </span>
-      </div>
+    <section className="relative min-h-screen flex flex-col justify-center px-4 sm:px-6 pt-20 pb-12 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-12 items-center">
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-        {/* Left — text */}
+        {/* Left — text (60%) */}
         <div className="min-w-0">
-          <h1 className="wc-mono font-bold uppercase leading-none mb-6 text-5xl md:text-6xl lg:text-7xl">
-            THE WILL<br />
-            <span className="text-wc-green">SCARCAT</span><br />
-            TERMINAL
-          </h1>
-
-          {/* Status badges */}
-          <div className="flex flex-wrap gap-2 mb-6">
-            <span className="wc-badge wc-badge-green">LIVE</span>
-            <span className="wc-badge wc-badge-white">6 CATS</span>
-            <span className="wc-badge wc-badge-gray">PURR · ROBINHOOD CHAIN</span>
+          {/* Chain label */}
+          <div className="flex items-center gap-2 mb-6">
+            <LivePing />
+            <span className="text-[11px] font-medium tracking-widest uppercase text-gray-500">
+              Robinhood Chain · 4663
+            </span>
           </div>
 
-          <p className="text-wc-muted text-sm leading-relaxed mb-8 max-w-md">
+          {/* Headline */}
+          <h1
+            className="font-black leading-[0.92] tracking-[-0.04em] mb-6"
+            style={{ fontSize: 'clamp(3rem, 8vw, 7rem)' }}
+          >
+            <span className="text-white block">THE WILL</span>
+            <span className="block text-glow" style={{ color: '#CCFF00' }}>SCARCAT</span>
+            <span className="text-white block">TERMINAL</span>
+          </h1>
+
+          {/* Badge pills */}
+          <div className="flex flex-wrap gap-2 mb-7">
+            {BADGES.map((b) => (
+              <span
+                key={b.label}
+                className="px-3 py-1 rounded-full text-[11px] font-bold tracking-wide"
+                style={{
+                  border: `1px solid ${b.accent ? 'rgba(204,255,0,0.3)' : 'rgba(255,255,255,0.1)'}`,
+                  color: b.accent ? '#CCFF00' : 'rgba(255,255,255,0.5)',
+                  background: b.accent ? 'rgba(204,255,0,0.06)' : 'transparent',
+                }}
+              >
+                {b.label}
+              </span>
+            ))}
+          </div>
+
+          {/* Sub-text */}
+          <p className="text-gray-400 font-light mb-8 leading-relaxed max-w-md" style={{ fontSize: '18px' }}>
             Hold $WILL, choose your cat faction, earn dividends from every swap.
             CashCat auto-distributes if you don&apos;t pick.
           </p>
 
-          {/* CA box — address always truncated, Copy copies full */}
-          <div className="border border-wc-border flex items-center mb-8">
-            <span className="wc-mono text-[10px] wc-upper text-wc-green px-3 py-2 border-r border-wc-border shrink-0">
-              $WILL
+          {/* CA box */}
+          <div className="glass-card flex items-center mb-8 max-w-md overflow-hidden">
+            <span
+              className="wc-mono text-[10px] font-bold uppercase tracking-widest px-3 py-2.5 shrink-0"
+              style={{
+                color: '#CCFF00',
+                borderRight: '1px solid rgba(255,255,255,0.08)',
+              }}
+            >
+              WILL CA
             </span>
-            <span className="wc-mono text-xs text-wc-muted px-3 flex-1 font-bold">
+            <span className="wc-mono text-xs text-gray-400 px-3 flex-1 font-bold">
               {SHORT_CA}
             </span>
             <button
               onClick={handleCopy}
-              className="px-3 py-2 border-l border-wc-border wc-mono text-[10px] wc-upper text-wc-text hover:text-wc-green transition-colors shrink-0"
+              className="px-3 py-2.5 wc-mono text-[10px] font-bold uppercase tracking-widest transition-colors shrink-0"
+              style={{
+                color: copied ? '#CCFF00' : 'rgba(255,255,255,0.5)',
+                borderLeft: '1px solid rgba(255,255,255,0.08)',
+              }}
             >
-              {copied ? 'Copied!' : 'Copy'}
+              {copied ? 'Copied ✓' : 'Copy'}
             </button>
             <a
               href={`https://robinhoodchain.blockscout.com/address/${WILL_TOKEN}`}
               target="_blank"
               rel="noreferrer"
-              className="px-3 py-2 border-l border-wc-border wc-mono text-[10px] wc-upper text-wc-muted hover:text-wc-green transition-colors shrink-0"
+              className="px-3 py-2.5 wc-mono text-[10px] font-bold uppercase transition-colors shrink-0 hover:text-white"
+              style={{
+                color: 'rgba(255,255,255,0.3)',
+                borderLeft: '1px solid rgba(255,255,255,0.08)',
+              }}
             >
               ↗
             </a>
           </div>
 
-          {/* CTAs */}
+          {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row gap-3">
             <Link
               href="/dapp"
-              className="bg-wc-green text-black px-8 py-3 font-bold text-sm wc-mono wc-upper hover:bg-[#b8e600] transition-colors flex items-center justify-center gap-2"
+              className="flex items-center justify-center gap-2 px-8 py-4 font-black text-sm uppercase tracking-wide text-black transition-all hover:bg-white hover:scale-[1.02]"
+              style={{ background: '#CCFF00' }}
             >
               Launch dApp <ArrowRight size={14} />
             </Link>
             <a
               href="#how-to-buy"
-              className="border border-wc-border px-8 py-3 text-sm text-wc-muted hover:border-wc-green hover:text-wc-green transition-colors wc-mono wc-upper text-center"
+              className="flex items-center justify-center px-8 py-4 text-sm font-medium uppercase tracking-wide text-white transition-all hover:border-white/30"
+              style={{ border: '1px solid rgba(255,255,255,0.12)' }}
             >
               How to Buy
             </a>
           </div>
         </div>
 
-        {/* Right — logo + stats (visible on all screen sizes) */}
+        {/* Right — logo (40%) */}
         <div className="flex flex-col items-center gap-6">
-          <img
-            src="/images/willlogo.jpg"
-            alt="Will Scarcat"
-            className="w-32 h-32 md:w-64 md:h-64 rounded-full border-2 border-wc-green mx-auto object-cover"
-          />
+          <div className="relative">
+            <div
+              className="absolute inset-0 rounded-full blur-3xl scale-110 opacity-20"
+              style={{ background: '#CCFF00' }}
+            />
+            <img
+              src="/images/willlogo.jpg"
+              alt="Will Scarcat"
+              className="relative w-48 h-48 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full object-cover"
+              style={{ border: '2px solid rgba(204,255,0,0.2)' }}
+            />
+          </div>
 
-          {/* Stat grid */}
-          <div className="grid grid-cols-3 gap-px border border-wc-border bg-wc-border w-full">
+          {/* Mini stat strip */}
+          <div
+            className="grid grid-cols-3 w-full"
+            style={{
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid rgba(255,255,255,0.08)',
+            }}
+          >
             {[
               { value: 'PURR', label: 'Token', sub: '$WILL' },
-              { value: '4663', label: 'Chain ID', sub: 'Robinhood' },
+              { value: '4663', label: 'Chain', sub: 'Robinhood' },
               { value: '6', label: 'Factions', sub: 'Cats' },
-            ].map(s => (
-              <div key={s.label} className="bg-wc-card p-3 text-center">
-                <div className="wc-mono font-bold text-wc-text text-lg">{s.value}</div>
-                <div className="wc-mono wc-upper text-[9px] font-bold text-wc-green mt-0.5">{s.label}</div>
-                <div className="text-wc-muted text-[9px] mt-0.5">{s.sub}</div>
+            ].map((s, i) => (
+              <div
+                key={s.label}
+                className="p-3 text-center"
+                style={{
+                  borderLeft: i > 0 ? '1px solid rgba(255,255,255,0.06)' : 'none',
+                }}
+              >
+                <div className="font-bold text-white text-lg leading-none">{s.value}</div>
+                <div className="text-[9px] font-bold uppercase tracking-widest mt-1" style={{ color: '#CCFF00' }}>{s.label}</div>
+                <div className="text-[9px] text-gray-600 mt-0.5">{s.sub}</div>
               </div>
             ))}
           </div>
