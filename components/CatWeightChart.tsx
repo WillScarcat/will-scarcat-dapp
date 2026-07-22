@@ -1,6 +1,7 @@
 'use client'
 
 import { useCatStats } from '@/lib/hooks/useCatStats'
+import { CATS } from '@/lib/contracts'
 
 export default function CatWeightChart({ holdersCount }: { holdersCount: number }) {
   const { stats, isLoading } = useCatStats()
@@ -14,7 +15,7 @@ export default function CatWeightChart({ holdersCount }: { holdersCount: number 
 
       {isLoading ? (
         <div className="space-y-3">
-          {Array.from({ length: 6 }).map((_, i) => (
+          {Array.from({ length: CATS.length }).map((_, i) => (
             <div
               key={i}
               className="h-4 rounded animate-pulse"

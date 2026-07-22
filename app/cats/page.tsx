@@ -9,6 +9,9 @@ const CAT_DESCRIPTIONS: Record<string, string> = {
   shibcat: 'The loyal hound-cat. Fierce but fair. SHIBCAT carries the spirit of the OG meme dog, reimagined with whiskers and claws on Robinhood Chain.',
   buffcat: 'The strongman of Sherwood. Lifts twice its weight in dividends. Gains-focused, protein-rich, and always in the gym — BUFFCAT never skips leg day.',
   applcat: 'The merchant cat. Trades in knowledge and fruit. Sleek, minimalist, and dangerously premium — APPLCAT is for the cats who just work.',
+  helia: 'The watcher. Never blinks. Always stares. HELIA sees every transaction before it happens and never looks away.',
+  swink: 'Strongest wink in Sherwood. Lifts and winks simultaneously. SWINK flexes while others sleep and never drops the barbell.',
+  kitty: 'The meme lord of Sherwood. Diamond paws. Roars at apes. KITTY turned a $50k position into a movement and never sold a single whisker.',
 }
 
 export default function CatsPage() {
