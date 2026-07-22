@@ -9,6 +9,7 @@ export function useChooseCat() {
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
 
   function chooseCat(catAddress: `0x${string}`) {
+    if (!TRACKER) return
     writeContract({
       address: TRACKER,
       abi: TRACKER_ABI,

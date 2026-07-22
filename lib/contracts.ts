@@ -1,7 +1,7 @@
 import { parseAbi } from 'viem'
 
-export const WILL_TOKEN = '0xbc0a5427e2a06241a53b335d1c4fdae8100aafa9' as `0x${string}`
-export const TRACKER = '0x1c5dd362b2ae190468f25f9dff000d8f4c19fe44' as `0x${string}`
+export const WILL_TOKEN: `0x${string}` | undefined = undefined // deploying soon
+export const TRACKER: `0x${string}` | undefined = undefined    // deploying soon
 
 export const WILL_TOKEN_ABI = parseAbi([
   'function balanceOf(address) view returns (uint256)',

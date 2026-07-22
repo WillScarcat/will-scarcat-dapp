@@ -16,7 +16,7 @@ const PHASES: Phase[] = [
       { label: 'Smart contracts deployed', done: true },
       { label: 'Pick Your Cat live', done: true },
       { label: 'dApp live on Robinhood Chain', done: true },
-      { label: '6 cat factions active', done: true },
+      { label: 'Cat factions live', done: true },
     ],
   },
   {

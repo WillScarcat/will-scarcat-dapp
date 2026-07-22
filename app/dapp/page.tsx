@@ -4,7 +4,6 @@ import RewardsDashboard from '@/components/RewardsDashboard'
 import { SectionDivider } from '@/components/SectionDivider'
 import { Copy, CheckCircle } from 'lucide-react'
 import { useState } from 'react'
-import { WILL_TOKEN, TRACKER } from '@/lib/contracts'
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false)
@@ -21,10 +20,10 @@ function CopyButton({ text }: { text: string }) {
 }
 
 const CONTRACT_STATS = [
-  { label: 'Contract', value: WILL_TOKEN, display: WILL_TOKEN.slice(0, 6) + '…' + WILL_TOKEN.slice(-4), copyable: true },
-  { label: 'Tracker', value: TRACKER, display: TRACKER.slice(0, 6) + '…' + TRACKER.slice(-4), copyable: true },
+  { label: 'Contract', value: '', display: 'Deploying Soon', copyable: false },
+  { label: 'Tracker',  value: '', display: 'Deploying Soon', copyable: false },
   { label: 'Chain ID', value: '4663', display: '4663', copyable: false },
-  { label: 'Network', value: 'Robinhood Chain', display: 'Robinhood Chain', copyable: false },
+  { label: 'Network',  value: 'Robinhood Chain', display: 'Robinhood Chain', copyable: false },
 ]
 
 const STEPS = [

@@ -7,12 +7,12 @@ import { TRACKER, TRACKER_ABI, CATS } from '../contracts'
 export function useRewards(address: `0x${string}` | undefined) {
   const { data, isLoading, refetch } = useReadContracts({
     contracts: CATS.map(cat => ({
-      address: TRACKER,
+      address: TRACKER as `0x${string}`,
       abi: TRACKER_ABI,
       functionName: 'withdrawableDividendOf' as const,
       args: [cat.address, address!] as [`0x${string}`, `0x${string}`],
     })),
-    query: { enabled: !!address },
+    query: { enabled: !!address && !!TRACKER },
   })
 
   const rewards = CATS.map((cat, i) => {

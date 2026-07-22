@@ -5,11 +5,11 @@ import { TRACKER, TRACKER_ABI, CATS } from '../contracts'
 
 export function useCurrentCat(address: `0x${string}` | undefined) {
   const { data, isLoading } = useReadContract({
-    address: TRACKER,
+    address: TRACKER as `0x${string}`,
     abi: TRACKER_ABI,
     functionName: 'holderCat',
     args: [address!],
-    query: { enabled: !!address },
+    query: { enabled: !!address && !!TRACKER },
   })
 
   const catAddress = data as `0x${string}` | undefined

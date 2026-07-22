@@ -156,7 +156,7 @@ export default function RewardsPage() {
         {/* Key numbers */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-10">
           {[
-            { value: '6', label: 'Cat Factions', sub: 'Pick one' },
+            { value: '∞', label: 'Cat Factions', sub: 'Growing' },
             { value: '0%', label: 'Lock-up', sub: 'Claim any time' },
             { value: '∞', label: 'Switches', sub: 'No penalty' },
           ].map(s => (

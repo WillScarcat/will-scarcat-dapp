@@ -7,10 +7,10 @@ import { WILL_TOKEN, WILL_TOKEN_ABI } from '../contracts'
 export function useWillBalance(address: `0x${string}` | undefined) {
   const { data, isLoading } = useReadContracts({
     contracts: [
-      { address: WILL_TOKEN, abi: WILL_TOKEN_ABI, functionName: 'balanceOf', args: [address!] },
-      { address: WILL_TOKEN, abi: WILL_TOKEN_ABI, functionName: 'decimals' },
+      { address: WILL_TOKEN as `0x${string}`, abi: WILL_TOKEN_ABI, functionName: 'balanceOf', args: [address!] },
+      { address: WILL_TOKEN as `0x${string}`, abi: WILL_TOKEN_ABI, functionName: 'decimals' },
     ],
-    query: { enabled: !!address },
+    query: { enabled: !!address && !!WILL_TOKEN },
   })
 
   if (!data) return { balance: null, formatted: null, isLoading }

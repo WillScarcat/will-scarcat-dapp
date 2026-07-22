@@ -1,7 +1,7 @@
 import { LivePing } from './LivePing'
 import { ExternalLink } from 'lucide-react'
 
-const TRACKER = '0x1c5dd362b2ae190468f25f9dff000d8f4c19fe44'
+const TRACKER: string | undefined = undefined // deploying soon
 const EXPLORER = 'https://robinhoodchain.blockscout.com'
 
 type TxItem = {
@@ -29,6 +29,7 @@ function methodLabel(method: string | null): string {
 }
 
 async function fetchFeed(): Promise<TxItem[]> {
+  if (!TRACKER) return []
   try {
     const res = await fetch(
       `${EXPLORER}/api/v2/addresses/${TRACKER}/transactions?limit=15`,
@@ -82,14 +83,13 @@ export default async function LiveFeed() {
 
           {/* Rows */}
           {txs.length === 0 ? (
-            <div className="space-y-2 p-4">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-5 rounded animate-pulse"
-                  style={{ background: 'rgba(255,255,255,0.04)', animationDelay: `${i * 100}ms` }}
-                />
-              ))}
+            <div className="px-4 py-8 text-center">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-gray-700 mb-1">
+                Contract Deploying
+              </div>
+              <p className="text-[10px] text-gray-700">
+                Live reward stream will appear here once the contract is live on Robinhood Chain.
+              </p>
             </div>
           ) : (
             <div>

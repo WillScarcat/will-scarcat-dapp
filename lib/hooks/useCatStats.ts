@@ -7,11 +7,12 @@ import { TRACKER, TRACKER_ABI, CATS } from '../contracts'
 export function useCatStats() {
   const { data, isLoading } = useReadContracts({
     contracts: CATS.map(cat => ({
-      address: TRACKER,
+      address: TRACKER as `0x${string}`,
       abi: TRACKER_ABI,
       functionName: 'catTotalWeight' as const,
       args: [cat.address] as [`0x${string}`],
     })),
+    query: { enabled: !!TRACKER },
   })
 
   const weights = CATS.map((cat, i) => {

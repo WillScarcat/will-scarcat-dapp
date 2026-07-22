@@ -4,7 +4,7 @@ import { LivePing } from './LivePing'
 
 const BADGES = [
   { label: '● LIVE', accent: true },
-  { label: '6 CATS' },
+  { label: 'CATS' },
   { label: 'PURR · ROBINHOOD CHAIN' },
 ]
 
@@ -118,7 +118,7 @@ export default function Hero() {
             {[
               { value: 'PURR', label: 'Token', sub: '$WILL' },
               { value: '4663', label: 'Chain', sub: 'Robinhood' },
-              { value: '6', label: 'Factions', sub: 'Cats' },
+              { value: '∞', label: 'Factions', sub: 'Growing' },
             ].map((s, i) => (
               <div
                 key={s.label}

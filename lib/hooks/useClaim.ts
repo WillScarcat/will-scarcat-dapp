@@ -9,6 +9,7 @@ export function useClaim() {
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
 
   function claim() {
+    if (!TRACKER) return
     writeContract({
       address: TRACKER,
       abi: TRACKER_ABI,

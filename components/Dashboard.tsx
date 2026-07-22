@@ -25,7 +25,7 @@ function formatVolume(v: number): string {
 export default async function Dashboard() {
   const [price, tokenStats] = await Promise.all([
     getPurrPrice(),
-    getTokenStats(WILL_TOKEN),
+    WILL_TOKEN ? getTokenStats(WILL_TOKEN) : Promise.resolve({ holders: 0, transfers: 0, totalSupply: '0' }),
   ])
 
   const up = price.priceChange24h >= 0
