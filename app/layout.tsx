@@ -10,6 +10,11 @@ export const metadata: Metadata = {
   title: 'Will Scarcat — Pick Your Cat',
   description: 'Hold $WILL, choose your cat faction, earn dividends on Robinhood Chain.',
   manifest: '/manifest.json',
+  icons: {
+    icon: '/images/willlogo.jpg',
+    shortcut: '/images/willlogo.jpg',
+    apple: '/images/willlogo.jpg',
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
@@ -35,6 +40,8 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <link rel="icon" href="/images/willlogo.jpg" type="image/jpeg" />
+        <link rel="apple-touch-icon" href="/images/willlogo.jpg" />
       </head>
       <body>
         <Providers>
