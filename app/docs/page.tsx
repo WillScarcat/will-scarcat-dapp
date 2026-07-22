@@ -24,12 +24,60 @@ const CONTRACTS = [
   },
 ]
 
-const ABI_SNIPPETS = [
+const TRACKER_ABI = [
   { sig: 'chooseCat(address catToken)', desc: 'Set your active cat faction' },
   { sig: 'withdrawDividend()', desc: 'Claim pending dividends for your cat' },
   { sig: 'holderCat(address)', desc: 'Returns the active cat address for a wallet' },
   { sig: 'withdrawableDividendOf(address cat, address owner)', desc: 'Claimable amount for wallet + faction' },
   { sig: 'catTotalWeight(address cat)', desc: 'Total $WILL weight backing a faction' },
+  { sig: 'totalDividendsDistributed()', desc: 'Lifetime ETH distributed to all holders' },
+  { sig: 'dividendOf(address owner)', desc: 'Total lifetime dividends earned by wallet' },
+]
+
+const WILL_ABI = [
+  { sig: 'balanceOf(address)', desc: 'Returns $WILL balance of wallet' },
+  { sig: 'transfer(address to, uint256 amount)', desc: 'Transfer $WILL (triggers tax on DEX swaps)' },
+  { sig: 'totalSupply()', desc: 'Total $WILL supply (fixed at launch)' },
+  { sig: 'name() / symbol() / decimals()', desc: 'Standard ERC-20 metadata: "Will Scarcat", "WILL", 18' },
+]
+
+const WAGMI_SNIPPETS = [
+  {
+    title: 'Read claimable amount',
+    code: `import { useReadContract } from 'wagmi'
+
+const { data: claimable } = useReadContract({
+  address: TRACKER_ADDRESS,
+  abi: TRACKER_ABI,
+  functionName: 'withdrawableDividendOf',
+  args: [catAddress, walletAddress],
+  chainId: 4663,
+})`,
+  },
+  {
+    title: 'Claim dividends',
+    code: `import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
+
+const { writeContract, data: hash } = useWriteContract()
+const { isSuccess } = useWaitForTransactionReceipt({ hash })
+
+writeContract({
+  address: TRACKER_ADDRESS,
+  abi: TRACKER_ABI,
+  functionName: 'withdrawDividend',
+  chainId: 4663,
+})`,
+  },
+  {
+    title: 'Switch cat faction',
+    code: `writeContract({
+  address: TRACKER_ADDRESS,
+  abi: TRACKER_ABI,
+  functionName: 'chooseCat',
+  args: [newCatAddress],
+  chainId: 4663,
+})`,
+  },
 ]
 
 function TableRow({ left, right, link }: { left: string; right: string; link?: string }) {
@@ -157,13 +205,13 @@ export default function DocsPage() {
           </div>
         </section>
 
-        {/* ABI Reference */}
+        {/* Tracker ABI */}
         <section>
           <h2 className="text-[10px] font-bold uppercase tracking-[0.25em] mb-3" style={{ color: 'rgba(204,255,0,0.7)' }}>
             Tracker ABI Reference
           </h2>
           <div className="glass-card overflow-hidden">
-            {ABI_SNIPPETS.map(fn => (
+            {TRACKER_ABI.map(fn => (
               <div
                 key={fn.sig}
                 className="px-4 py-3"
@@ -171,6 +219,53 @@ export default function DocsPage() {
               >
                 <div className="wc-mono text-xs text-white mb-1 break-all">{fn.sig}</div>
                 <div className="text-[10px] text-gray-600">{fn.desc}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* $WILL Token ABI */}
+        <section>
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.25em] mb-3" style={{ color: 'rgba(204,255,0,0.7)' }}>
+            $WILL Token ABI Reference
+          </h2>
+          <div className="glass-card overflow-hidden">
+            {WILL_ABI.map(fn => (
+              <div
+                key={fn.sig}
+                className="px-4 py-3"
+                style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+              >
+                <div className="wc-mono text-xs text-white mb-1 break-all">{fn.sig}</div>
+                <div className="text-[10px] text-gray-600">{fn.desc}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* wagmi Integration Guide */}
+        <section>
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.25em] mb-1" style={{ color: 'rgba(204,255,0,0.7)' }}>
+            wagmi v2 Integration
+          </h2>
+          <p className="text-gray-600 text-[11px] mb-3">
+            Chain ID 4663 · wagmi v2 · @rainbow-me/rainbowkit v2
+          </p>
+          <div className="space-y-3">
+            {WAGMI_SNIPPETS.map(s => (
+              <div key={s.title} className="glass-card overflow-hidden">
+                <div
+                  className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-gray-500"
+                  style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+                >
+                  {s.title}
+                </div>
+                <pre
+                  className="px-4 py-4 text-[11px] leading-relaxed overflow-x-auto"
+                  style={{ color: '#9ca3af', fontFamily: 'monospace' }}
+                >
+                  {s.code}
+                </pre>
               </div>
             ))}
           </div>

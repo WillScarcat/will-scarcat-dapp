@@ -3,15 +3,17 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAccount } from 'wagmi'
-import { Home, LayoutDashboard, Cat, Coins, ShoppingBag, BookOpen } from 'lucide-react'
+import { Home, LayoutDashboard, Cat, Coins, ShoppingBag, BookOpen, Map, HelpCircle } from 'lucide-react'
 
 const NAV = [
-  { href: '/',        label: 'Home',       icon: Home },
-  { href: '/dapp',    label: 'Terminal',   icon: LayoutDashboard },
-  { href: '/cats',    label: 'Cats',       icon: Cat },
-  { href: '/rewards', label: 'Rewards',    icon: Coins },
-  { href: '/buy',     label: 'How to Buy', icon: ShoppingBag },
-  { href: '/docs',    label: 'Docs',       icon: BookOpen },
+  { href: '/',         label: 'Home',       icon: Home },
+  { href: '/dapp',     label: 'Terminal',   icon: LayoutDashboard },
+  { href: '/cats',     label: 'Cats',       icon: Cat },
+  { href: '/rewards',  label: 'Rewards',    icon: Coins },
+  { href: '/buy',      label: 'How to Buy', icon: ShoppingBag },
+  { href: '/roadmap',  label: 'Roadmap',    icon: Map },
+  { href: '/faq',      label: 'FAQ',        icon: HelpCircle },
+  { href: '/docs',     label: 'Docs',       icon: BookOpen },
 ]
 
 export default function Sidebar() {

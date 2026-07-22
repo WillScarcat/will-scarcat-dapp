@@ -1,6 +1,14 @@
 import Link from 'next/link'
 import { ArrowRight, Repeat, Coins, Cat, Zap } from 'lucide-react'
 
+const FLOW = [
+  { label: 'SWAP', sub: 'DEX Trade' },
+  { label: '5% TAX', sub: 'Captured' },
+  { label: 'TRACKER', sub: 'Smart Contract' },
+  { label: 'YOUR CAT', sub: 'Faction Pool' },
+  { label: 'WALLET', sub: 'Your ETH' },
+]
+
 const STEPS = [
   {
     icon: Repeat,
@@ -45,6 +53,69 @@ export default function RewardsPage() {
             $WILL is a dividend-distributing token. Every swap generates yield — routed to
             your chosen cat faction, claimable at any time.
           </p>
+        </div>
+
+        {/* Animated flow diagram */}
+        <div className="mb-10 glass-card px-5 py-6 overflow-x-auto">
+          <div className="text-[10px] font-bold uppercase tracking-[0.3em] mb-5" style={{ color: 'rgba(204,255,0,0.5)' }}>
+            Reward Flow
+          </div>
+          <div className="flex items-center gap-0 min-w-max">
+            {FLOW.map((node, i) => (
+              <div key={node.label} className="flex items-center">
+                {/* Node */}
+                <div className="flex flex-col items-center gap-1.5">
+                  <div
+                    className="px-3 py-2 text-center"
+                    style={{
+                      border: '1px solid rgba(204,255,0,0.25)',
+                      background: 'rgba(204,255,0,0.06)',
+                      animationDelay: `${i * 0.4}s`,
+                    }}
+                  >
+                    <div
+                      className="wc-mono text-[11px] font-black tracking-widest whitespace-nowrap"
+                      style={{ color: '#CCFF00' }}
+                    >
+                      {node.label}
+                    </div>
+                  </div>
+                  <div className="text-[9px] uppercase tracking-widest text-gray-600 whitespace-nowrap">
+                    {node.sub}
+                  </div>
+                </div>
+
+                {/* Arrow connector */}
+                {i < FLOW.length - 1 && (
+                  <div className="flex items-center mx-1 mb-4">
+                    <div className="relative w-8 h-px" style={{ background: 'rgba(204,255,0,0.2)' }}>
+                      <div
+                        className="absolute top-1/2 left-0 -translate-y-1/2 w-2 h-px"
+                        style={{
+                          background: '#CCFF00',
+                          animation: `flow-pulse 2s ease-in-out ${i * 0.4}s infinite`,
+                        }}
+                      />
+                    </div>
+                    <div
+                      className="w-0 h-0"
+                      style={{
+                        borderTop: '3px solid transparent',
+                        borderBottom: '3px solid transparent',
+                        borderLeft: '5px solid rgba(204,255,0,0.4)',
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          <style>{`
+            @keyframes flow-pulse {
+              0%, 100% { opacity: 0.3; transform: translateY(-50%) translateX(0); }
+              50% { opacity: 1; transform: translateY(-50%) translateX(24px); }
+            }
+          `}</style>
         </div>
 
         {/* Flow steps */}

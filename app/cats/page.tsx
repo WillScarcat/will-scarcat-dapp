@@ -3,12 +3,12 @@ import { ArrowRight } from 'lucide-react'
 import { CATS } from '@/lib/contracts'
 
 const CAT_DESCRIPTIONS: Record<string, string> = {
-  cashcat: 'The default faction. If you hold $WILL without picking a cat, your weight flows to CashCat and is distributed automatically.',
-  meow: 'The original. Pure cat energy — MEOW is the meme standard, the floor, the vibe.',
-  gmeow: 'Good Morning Energy. GMEOW is for the early risers who believe in the number going up.',
-  shibcat: 'The meme hybrid. SHIBCAT carries the spirit of the OG meme dog, reimagined as a cat on Robinhood Chain.',
-  buffcat: 'Gains-focused, protein-rich, and always in the gym. BUFFCAT is for holders who never skip leg day.',
-  applcat: 'Sleek, minimalist, and dangerously premium. APPLCAT — for the cats who just work.',
+  cashcat: 'The banker of Sherwood. Every transaction fills the vault — and CashCat makes sure no one leaves empty-handed. The default faction for all $WILL holders.',
+  meow: 'The silent shadow. Strikes without warning. MEOW is the meme standard, the floor, the vibe — pure cat energy distilled into a ticker.',
+  gmeow: 'The morning herald. First to arrive, last to leave. GMEOW is for the early risers who believe in the number going up and never sell at the bottom.',
+  shibcat: 'The loyal hound-cat. Fierce but fair. SHIBCAT carries the spirit of the OG meme dog, reimagined with whiskers and claws on Robinhood Chain.',
+  buffcat: 'The strongman of Sherwood. Lifts twice its weight in dividends. Gains-focused, protein-rich, and always in the gym — BUFFCAT never skips leg day.',
+  applcat: 'The merchant cat. Trades in knowledge and fruit. Sleek, minimalist, and dangerously premium — APPLCAT is for the cats who just work.',
 }
 
 export default function CatsPage() {
