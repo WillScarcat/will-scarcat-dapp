@@ -1,0 +1,32 @@
+{
+  "name": "Will Scarcat — Pick Your Cat",
+  "short_name": "Will Scarcat",
+  "description": "Hold $WILL, pick your cat, earn rewards automatically",
+  "start_url": "/dapp",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#CCFF00",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/images/willlogo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/willlogo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Pick Your Cat",
+      "url": "/dapp",
+      "description": "Choose your reward cat"
+    }
+  ]
+}
