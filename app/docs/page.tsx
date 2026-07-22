@@ -1,5 +1,5 @@
 import { ExternalLink } from 'lucide-react'
-import { WILL_TOKEN, TRACKER, CATS } from '@/lib/contracts'
+import { CATS } from '@/lib/contracts'
 
 const EXPLORER = 'https://robinhoodchain.blockscout.com'
 
@@ -14,12 +14,12 @@ const CHAIN = [
 const CONTRACTS = [
   {
     label: '$WILL Token',
-    address: WILL_TOKEN,
+    address: null,
     description: 'ERC-20 dividend-distributing token. Hold to earn.',
   },
   {
     label: 'Tracker',
-    address: TRACKER,
+    address: null,
     description: 'Dividend tracker — call chooseCat() and withdrawDividend().',
   },
 ]
@@ -93,18 +93,26 @@ export default function DocsPage() {
                   style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
                 >
                   <span className="font-bold text-sm text-white">{c.label}</span>
-                  <a
-                    href={`${EXPLORER}/address/${c.address}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 transition-colors hover:text-white"
-                    style={{ color: 'rgba(204,255,0,0.7)' }}
-                  >
-                    Explorer <ExternalLink size={10} />
-                  </a>
+                  {c.address ? (
+                    <a
+                      href={`${EXPLORER}/address/${c.address}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 transition-colors hover:text-white"
+                      style={{ color: 'rgba(204,255,0,0.7)' }}
+                    >
+                      Explorer <ExternalLink size={10} />
+                    </a>
+                  ) : (
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-gray-600">
+                      Deploying Soon
+                    </span>
+                  )}
                 </div>
                 <div className="px-4 py-3">
-                  <div className="wc-mono text-xs text-gray-400 mb-2 break-all">{c.address}</div>
+                  <div className="wc-mono text-xs mb-2 italic" style={{ color: c.address ? '#9ca3af' : '#374151' }}>
+                    {c.address ?? 'TBD — contract deploying soon'}
+                  </div>
                   <div className="text-[11px] text-gray-600">{c.description}</div>
                 </div>
               </div>

@@ -1,12 +1,6 @@
-'use client'
-
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { LivePing } from './LivePing'
-import { WILL_TOKEN } from '@/lib/contracts'
-import { useState } from 'react'
-
-const SHORT_CA = `${WILL_TOKEN.slice(0, 6)}...${WILL_TOKEN.slice(-4)}`
 
 const BADGES = [
   { label: '● LIVE', accent: true },
@@ -15,13 +9,6 @@ const BADGES = [
 ]
 
 export default function Hero() {
-  const [copied, setCopied] = useState(false)
-
-  function handleCopy() {
-    navigator.clipboard.writeText(WILL_TOKEN)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
 
   return (
     <section className="relative min-h-screen flex flex-col justify-center px-4 sm:px-6 pt-10 pb-12 max-w-6xl mx-auto">
@@ -70,42 +57,20 @@ export default function Hero() {
             CashCat auto-distributes if you don&apos;t pick.
           </p>
 
-          {/* CA box */}
+          {/* CA box — deploying soon */}
           <div className="glass-card flex items-center mb-8 max-w-md overflow-hidden">
             <span
               className="wc-mono text-[10px] font-bold uppercase tracking-widest px-3 py-2.5 shrink-0"
               style={{
-                color: '#CCFF00',
+                color: 'rgba(204,255,0,0.5)',
                 borderRight: '1px solid rgba(255,255,255,0.08)',
               }}
             >
-              WILL CA
+              $WILL CA
             </span>
-            <span className="wc-mono text-xs text-gray-400 px-3 flex-1 font-bold">
-              {SHORT_CA}
+            <span className="wc-mono text-[10px] text-gray-600 px-3 flex-1 italic">
+              Deploying Soon
             </span>
-            <button
-              onClick={handleCopy}
-              className="px-3 py-2.5 wc-mono text-[10px] font-bold uppercase tracking-widest transition-colors shrink-0"
-              style={{
-                color: copied ? '#CCFF00' : 'rgba(255,255,255,0.5)',
-                borderLeft: '1px solid rgba(255,255,255,0.08)',
-              }}
-            >
-              {copied ? 'Copied ✓' : 'Copy'}
-            </button>
-            <a
-              href={`https://robinhoodchain.blockscout.com/address/${WILL_TOKEN}`}
-              target="_blank"
-              rel="noreferrer"
-              className="px-3 py-2.5 wc-mono text-[10px] font-bold uppercase transition-colors shrink-0 hover:text-white"
-              style={{
-                color: 'rgba(255,255,255,0.3)',
-                borderLeft: '1px solid rgba(255,255,255,0.08)',
-              }}
-            >
-              ↗
-            </a>
           </div>
 
           {/* CTA buttons */}

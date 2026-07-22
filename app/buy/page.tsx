@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { ArrowRight, ExternalLink } from 'lucide-react'
-import { WILL_TOKEN } from '@/lib/contracts'
 
 const STEPS = [
   {
@@ -24,12 +23,11 @@ const STEPS = [
   {
     step: '03',
     title: 'Buy $WILL on a DEX',
-    body: 'Swap ETH for $WILL using the contract address below on any Robinhood Chain DEX.',
+    body: 'Contract deploying soon — once live, swap ETH for $WILL on any Robinhood Chain DEX.',
     details: [
       { label: 'Token', value: '$WILL' },
-      { label: 'Contract', value: `${WILL_TOKEN.slice(0, 10)}…${WILL_TOKEN.slice(-6)}` },
+      { label: 'Contract', value: 'Deploying Soon' },
     ],
-    copy: WILL_TOKEN,
   },
   {
     step: '04',
@@ -121,27 +119,21 @@ export default function BuyPage() {
         </div>
 
         {/* Contract address box */}
-        <div className="glass-card overflow-hidden" style={{ borderColor: 'rgba(204,255,0,0.15)' }}>
+        <div className="glass-card overflow-hidden" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
           <div
             className="px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest"
             style={{
-              color: 'rgba(204,255,0,0.8)',
+              color: 'rgba(255,255,255,0.3)',
               borderBottom: '1px solid rgba(255,255,255,0.06)',
-              background: 'rgba(204,255,0,0.04)',
+              background: 'rgba(255,255,255,0.02)',
             }}
           >
             $WILL Contract Address
           </div>
-          <div className="px-4 py-3 flex items-center justify-between gap-4">
-            <span className="wc-mono text-xs text-gray-300 break-all">{WILL_TOKEN}</span>
-            <a
-              href={`https://robinhoodchain.blockscout.com/address/${WILL_TOKEN}`}
-              target="_blank"
-              rel="noreferrer"
-              className="shrink-0 text-gray-500 hover:text-[#CCFF00] transition-colors"
-            >
-              <ExternalLink size={14} />
-            </a>
+          <div className="px-4 py-3">
+            <span className="wc-mono text-xs text-gray-600 italic">
+              TBD — deploying soon on Robinhood Chain
+            </span>
           </div>
         </div>
       </div>

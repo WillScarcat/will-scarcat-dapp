@@ -6,7 +6,6 @@ import LiveFeed from '@/components/LiveFeed'
 import { SectionDivider } from '@/components/SectionDivider'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { WILL_TOKEN } from '@/lib/contracts'
 
 export default function Home() {
   return (
@@ -29,7 +28,7 @@ export default function Home() {
           {[
             { step: '01', title: 'Add Robinhood Chain', desc: 'Chain ID 4663 · RPC: rpc.mainnet.chain.robinhood.com' },
             { step: '02', title: 'Bridge ETH', desc: 'Bridge ETH to Robinhood Chain via the official bridge.' },
-            { step: '03', title: 'Buy $WILL', desc: `CA: ${WILL_TOKEN.slice(0, 10)}…${WILL_TOKEN.slice(-6)} — swap on any Robinhood DEX.` },
+            { step: '03', title: 'Buy $WILL', desc: 'CA deploying soon — swap on any Robinhood DEX once live.' },
             { step: '04', title: 'Pick Your Cat', desc: 'Connect on /dapp, choose your faction, start earning.' },
           ].map(item => (
             <div
