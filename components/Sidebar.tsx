@@ -3,7 +3,12 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAccount } from 'wagmi'
-import { Home, LayoutDashboard, Cat, Coins, ShoppingBag, BookOpen, Map, HelpCircle } from 'lucide-react'
+import { Home, LayoutDashboard, Cat, Coins, ShoppingBag, BookOpen, Map, HelpCircle, ExternalLink, MessageCircle } from 'lucide-react'
+
+const SOCIALS = [
+  { href: 'https://github.com/WillScarcat', label: 'GitHub', icon: ExternalLink },
+  { href: 'https://t.me/WillScarcat',       label: 'Telegram', icon: MessageCircle },
+]
 
 const NAV = [
   { href: '/',         label: 'Home',       icon: Home },
@@ -94,6 +99,29 @@ export default function Sidebar() {
           )
         })}
       </nav>
+
+      {/* ── Socials ── */}
+      <div
+        className="shrink-0 py-1"
+        style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
+      >
+        {SOCIALS.map(({ href, label, icon: Icon }) => (
+          <a
+            key={href}
+            href={href}
+            target="_blank"
+            rel="noreferrer"
+            title={label}
+            className="flex items-center gap-3 h-9 px-4 transition-colors hover:bg-white/[0.03]"
+            style={{ color: '#4b5563' }}
+          >
+            <Icon size={15} className="shrink-0" strokeWidth={1.5} />
+            <span className="whitespace-nowrap overflow-hidden text-[11px] font-semibold uppercase tracking-wider opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-200">
+              {label}
+            </span>
+          </a>
+        ))}
+      </div>
 
       {/* ── Wallet / status ── */}
       <div
