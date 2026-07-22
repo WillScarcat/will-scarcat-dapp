@@ -1,15 +1,15 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import { LivePing } from './LivePing'
 import { WILL_TOKEN } from '@/lib/contracts'
 import { useState } from 'react'
 
+const SHORT_CA = `${WILL_TOKEN.slice(0, 6)}...${WILL_TOKEN.slice(-4)}`
+
 export default function Hero() {
   const [copied, setCopied] = useState(false)
-  const [imgError, setImgError] = useState(false)
 
   function handleCopy() {
     navigator.clipboard.writeText(WILL_TOKEN)
@@ -18,7 +18,7 @@ export default function Hero() {
   }
 
   return (
-    <section className="min-h-screen flex flex-col justify-center px-4 pt-20 max-w-6xl mx-auto">
+    <section className="min-h-screen flex flex-col justify-center px-4 sm:px-6 pt-20 pb-8 max-w-6xl mx-auto">
       {/* Live status row */}
       <div className="flex items-center gap-2 mb-6">
         <LivePing />
@@ -27,10 +27,10 @@ export default function Hero() {
         </span>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-12 items-center lg:items-start">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         {/* Left — text */}
-        <div className="flex-1">
-          <h1 className="wc-mono font-bold uppercase leading-none mb-6 text-5xl md:text-7xl">
+        <div className="min-w-0">
+          <h1 className="wc-mono font-bold uppercase leading-none mb-6 text-5xl md:text-6xl lg:text-7xl">
             THE WILL<br />
             <span className="text-wc-green">SCARCAT</span><br />
             TERMINAL
@@ -44,23 +44,23 @@ export default function Hero() {
           </div>
 
           <p className="text-wc-muted text-sm leading-relaxed mb-8 max-w-md">
-            Hold $WILL, choose your cat faction, earn ETH dividends from every swap.
+            Hold $WILL, choose your cat faction, earn dividends from every swap.
             CashCat auto-distributes if you don&apos;t pick.
           </p>
 
-          {/* CA box */}
-          <div className="border border-wc-border flex items-center mb-8 max-w-md">
+          {/* CA box — address always truncated, Copy copies full */}
+          <div className="border border-wc-border flex items-center mb-8">
             <span className="wc-mono text-[10px] wc-upper text-wc-green px-3 py-2 border-r border-wc-border shrink-0">
-              $WILL CA
+              $WILL
             </span>
-            <span className="wc-mono text-xs text-wc-muted px-3 flex-1 truncate">
-              {WILL_TOKEN}
+            <span className="wc-mono text-xs text-wc-muted px-3 flex-1 font-bold">
+              {SHORT_CA}
             </span>
             <button
               onClick={handleCopy}
               className="px-3 py-2 border-l border-wc-border wc-mono text-[10px] wc-upper text-wc-text hover:text-wc-green transition-colors shrink-0"
             >
-              {copied ? 'Copied' : 'Copy'}
+              {copied ? 'Copied!' : 'Copy'}
             </button>
             <a
               href={`https://robinhoodchain.blockscout.com/address/${WILL_TOKEN}`}
@@ -68,7 +68,7 @@ export default function Hero() {
               rel="noreferrer"
               className="px-3 py-2 border-l border-wc-border wc-mono text-[10px] wc-upper text-wc-muted hover:text-wc-green transition-colors shrink-0"
             >
-              Explorer ↗
+              ↗
             </a>
           </div>
 
@@ -89,24 +89,16 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Right — logo + stats */}
+        {/* Right — logo + stats (visible on all screen sizes) */}
         <div className="flex flex-col items-center gap-6">
-          {!imgError && (
-            <div className="border-2 border-wc-green/30 p-1">
-              <Image
-                src="/images/willlogo.jpg"
-                alt="Will"
-                width={180}
-                height={180}
-                className="object-cover"
-                priority
-                onError={() => setImgError(true)}
-              />
-            </div>
-          )}
+          <img
+            src="/images/willlogo.jpg"
+            alt="Will Scarcat"
+            className="w-32 h-32 md:w-64 md:h-64 rounded-full border-2 border-wc-green mx-auto object-cover"
+          />
 
           {/* Stat grid */}
-          <div className="grid grid-cols-3 gap-px border border-wc-border bg-wc-border w-full min-w-[240px]">
+          <div className="grid grid-cols-3 gap-px border border-wc-border bg-wc-border w-full">
             {[
               { value: 'PURR', label: 'Token', sub: '$WILL' },
               { value: '4663', label: 'Chain ID', sub: 'Robinhood' },
