@@ -195,6 +195,82 @@ body {
   }
 }
 
+/* ── Mobile: horizontal card layout + 1-col grid ── */
+@media (max-width: 768px) {
+  .cat-grid {
+    grid-template-columns: 1fr !important;
+    gap: 8px;
+  }
+
+  .cat-img {
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 12px !important;
+  }
+
+  .cat-buttons {
+    display: flex !important;
+    opacity: 1 !important;
+    transform: none !important;
+    flex-direction: row;
+    gap: 6px;
+  }
+
+  .btn-choose, .btn-claim {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .cat-card-wrapper:active {
+    transform: scale(0.97) !important;
+    transition: transform 0.1s ease !important;
+  }
+
+  .claim-all-btn {
+    position: fixed !important;
+    bottom: 72px;
+    left: 16px;
+    right: 16px;
+    width: auto !important;
+    z-index: 99;
+    padding: 16px !important;
+    font-size: 16px !important;
+    border-radius: 14px !important;
+  }
+}
+
+/* ── Active cat banner ── */
+.active-cat-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(204,255,0,0.05);
+  border: 1px solid rgba(204,255,0,0.2);
+  border-radius: 16px;
+}
+
+/* ── Page transition ── */
+.page-transition {
+  animation: fadeSlideIn 0.3s ease;
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+/* ── Mobile typography ── */
+@media (max-width: 768px) {
+  .hero-title    { font-size: clamp(2.5rem, 12vw, 4rem) !important; }
+  .section-title { font-size: 1.5rem; }
+  .stat-value    { font-size: 1.8rem; }
+}
+
 /* ── Selection + scrollbar ── */
 ::selection { background: #CCFF00; color: #0f0f12; }
 

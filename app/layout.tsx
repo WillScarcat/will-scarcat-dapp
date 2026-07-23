@@ -48,7 +48,9 @@ export default function RootLayout({
           <div className="flex min-h-screen">
             <Sidebar />
             <div className="flex-1 min-w-0 lg:ml-14">
-              <main className="pb-16 lg:pb-0">{children}</main>
+              <main className="pb-16 lg:pb-0">
+                <div className="page-transition">{children}</div>
+              </main>
               <BottomNav />
               <PullToRefresh />
               <ServiceWorkerRegistration />

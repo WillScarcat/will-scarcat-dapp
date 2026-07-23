@@ -83,14 +83,26 @@ export default function RewardsDashboard() {
         <ConnectButton accountStatus="avatar" chainStatus="none" showBalance={false} />
       </div>
 
-      {/* Active cat */}
+      {/* Active cat banner */}
       {currentCat ? (
-        <div className="border border-wc-border bg-wc-black px-4 py-2.5 flex items-center gap-3">
-          <span className="wc-mono wc-upper text-[9px] text-wc-muted">Active cat:</span>
-          <span className="wc-mono wc-upper font-bold text-sm" style={{ color: currentCat.color }}>
-            ${currentCat.ticker}
-          </span>
-          <span className="wc-badge wc-badge-green ml-auto">CHOSEN</span>
+        <div className="active-cat-banner">
+          <img
+            src={currentCat.img}
+            alt={currentCat.name}
+            className="w-10 h-10 rounded-xl object-cover shrink-0"
+          />
+          <div className="flex-1 min-w-0">
+            <div className="text-[9px] uppercase tracking-widest text-gray-500">Active Cat</div>
+            <div className="font-bold text-sm" style={{ color: currentCat.color }}>
+              ${currentCat.ticker}
+            </div>
+          </div>
+          <div className="text-right shrink-0">
+            <div className="text-[9px] uppercase tracking-widest text-gray-500">Claimable</div>
+            <div className="wc-mono font-bold text-xs text-white">
+              {totalClaimable > 0 ? totalClaimable.toFixed(4) : '—'}
+            </div>
+          </div>
         </div>
       ) : (
         <div className="border border-wc-border px-4 py-2.5 wc-mono text-[10px] text-wc-muted">
@@ -119,7 +131,7 @@ export default function RewardsDashboard() {
       )}
 
       {/* Cat grid */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="cat-grid grid grid-cols-3 gap-3">
         {CATS.map(cat => {
           const reward = rewards.find(r => r.cat.id === cat.id)
           const weightEntry = catStats.find(s => s.cat.id === cat.id)
@@ -166,12 +178,12 @@ export default function RewardsDashboard() {
         </div>
       )}
 
-      {/* Claim All */}
+      {/* Claim All — fixed on mobile, inline on desktop */}
       {totalClaimable > 0 && (
         <button
           onClick={() => claim()}
           disabled={isClaimPending}
-          className="w-full bg-wc-green py-3 font-bold text-black text-sm wc-mono wc-upper hover:bg-[#b8e600] transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+          className="claim-all-btn w-full bg-wc-green py-3 font-bold text-black text-sm wc-mono wc-upper hover:bg-[#b8e600] transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
         >
           {isClaimPending ? (
             <><Loader2 className="w-4 h-4 animate-spin" />Claiming...</>

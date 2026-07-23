@@ -7,7 +7,7 @@ export default function PickYourCat() {
   return (
     <section id="cats" className="px-4">
       <div className="mx-auto max-w-6xl">
-        <div className="grid grid-cols-3 gap-3">
+        <div className="cat-grid grid grid-cols-3 gap-3">
           {CATS.map(cat => (
             <CatCard key={cat.id} cat={cat} />
           ))}
