@@ -121,6 +121,80 @@ body {
   }
 }
 
+/* ── Cat Cards — Liquid Glass + Micro-interactions ── */
+.cat-glass {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: border-color 0.3s cubic-bezier(0.4,0,0.2,1),
+              box-shadow 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+.cat-tilt {
+  will-change: transform;
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1),
+              box-shadow 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.cat-tilt:hover {
+  transform: perspective(1000px) translateY(-8px) rotateX(4deg) rotateY(-4deg);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 30px rgba(204,255,0,0.1);
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(204,255,0,0.2); }
+  50%       { box-shadow: 0 0 40px rgba(204,255,0,0.5); }
+}
+.cat-selected {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+.cat-buttons {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.cat-card-wrapper:hover .cat-buttons {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cat-card-wrapper img {
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  will-change: transform;
+}
+.cat-card-wrapper:hover img {
+  transform: scale(1.1);
+}
+
+.cat-card-wrapper:hover .cat-ticker {
+  text-shadow: 0 0 12px var(--cat-color, rgba(204,255,0,0.6));
+  transition: text-shadow 0.3s ease;
+}
+
+/* Ambient backgrounds per faction */
+.ambient-cashcat { --ambient: rgba(204,255,0,0.03); }
+.ambient-meow    { --ambient: rgba(168,85,247,0.03); }
+.ambient-gmeow   { --ambient: rgba(56,189,248,0.03); }
+.ambient-shibcat { --ambient: rgba(251,146,60,0.03); }
+.ambient-buffcat { --ambient: rgba(74,222,128,0.03); }
+.ambient-applcat { --ambient: rgba(248,113,113,0.03); }
+.ambient-helia   { --ambient: rgba(255,107,107,0.03); }
+.ambient-swink   { --ambient: rgba(78,205,196,0.03); }
+.ambient-kitty   { --ambient: rgba(255,230,109,0.03); }
+
+.cat-card-wrapper {
+  background: var(--ambient, rgba(255,255,255,0.02));
+}
+
+/* Touch devices: disable 3D tilt (can cause sticky hover states) */
+@media (hover: none) {
+  .cat-tilt:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
 /* ── Selection + scrollbar ── */
 ::selection { background: #CCFF00; color: #0f0f12; }
 

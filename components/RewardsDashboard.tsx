@@ -119,24 +119,23 @@ export default function RewardsDashboard() {
       )}
 
       {/* Cat grid */}
-      <div className="grid grid-cols-2 gap-px md:grid-cols-3 bg-wc-border border border-wc-border">
+      <div className="grid grid-cols-3 gap-3">
         {CATS.map(cat => {
           const reward = rewards.find(r => r.cat.id === cat.id)
           const weightEntry = catStats.find(s => s.cat.id === cat.id)
           return (
-            <div key={cat.id} className="bg-wc-black">
-              <CatCard
-                cat={cat}
-                isSelected={currentCat?.id === cat.id}
-                claimable={reward?.formatted}
-                weightPct={weightEntry?.pct}
-                showActions
-                onChoose={() => chooseCat(cat.address)}
-                onClaim={() => claim()}
-                isChoosingPending={isChoosePending}
-                isClaimPending={isClaimPending}
-              />
-            </div>
+            <CatCard
+              key={cat.id}
+              cat={cat}
+              isSelected={currentCat?.id === cat.id}
+              claimable={reward?.formatted}
+              weightPct={weightEntry?.pct}
+              showActions
+              onChoose={() => chooseCat(cat.address)}
+              onClaim={() => claim()}
+              isChoosingPending={isChoosePending}
+              isClaimPending={isClaimPending}
+            />
           )
         })}
       </div>

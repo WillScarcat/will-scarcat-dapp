@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Cat as CatIcon } from 'lucide-react'
 import type { Cat } from '@/lib/contracts'
+import { useMediaQuery } from '@/lib/hooks/useMediaQuery'
 
 type Props = {
   cat: Cat
@@ -28,16 +29,21 @@ export default function CatCard({
   showActions = false,
 }: Props) {
   const [imgError, setImgError] = useState(false)
+  const isMobile = useMediaQuery('(max-width: 768px)')
   const hasReward = claimable && parseFloat(claimable) > 0
 
   return (
     <div
-      className="glass-card glass-card-hover relative p-4 transition-all duration-200"
+      className={[
+        'cat-glass cat-tilt cat-card-wrapper relative p-4',
+        `ambient-${cat.id}`,
+        isSelected ? 'cat-selected' : '',
+      ].join(' ')}
       style={{
-        borderColor: isSelected ? cat.color : 'rgba(255,255,255,0.08)',
-        borderWidth: isSelected ? 2 : 1,
-        boxShadow: isSelected ? `0 0 20px ${cat.color}22` : undefined,
-      }}
+        border: isSelected ? `2px solid ${cat.color}` : undefined,
+        touchAction: 'manipulation',
+        '--cat-color': cat.color,
+      } as React.CSSProperties}
     >
       {/* CHOSEN badge */}
       {isSelected && (
@@ -52,10 +58,7 @@ export default function CatCard({
       <div className="mb-3 flex items-center gap-3">
         <div
           className="h-12 w-12 overflow-hidden flex items-center justify-center shrink-0 rounded-xl"
-          style={{
-            border: `1px solid rgba(255,255,255,0.1)`,
-            background: cat.color + '0d',
-          }}
+          style={{ border: `1px solid rgba(255,255,255,0.1)`, background: cat.color + '0d' }}
         >
           {imgError ? (
             <CatIcon className="w-6 h-6" style={{ color: cat.color }} />
@@ -70,7 +73,10 @@ export default function CatCard({
         </div>
         <div>
           <div className="font-semibold text-white text-sm">{cat.name}</div>
-          <div className="wc-mono text-[10px] font-bold tracking-widest uppercase" style={{ color: cat.color }}>
+          <div
+            className="cat-ticker wc-mono text-[10px] font-bold tracking-widest uppercase"
+            style={{ color: cat.color }}
+          >
             ${cat.ticker}
           </div>
         </div>
@@ -105,17 +111,17 @@ export default function CatCard({
             </div>
           )}
 
-          <div className="flex gap-2">
+          {/* Buttons: always visible on mobile, reveal on hover on desktop */}
+          <div
+            className="flex gap-2 cat-buttons"
+            style={isMobile ? { opacity: 1, transform: 'translateY(0)' } : undefined}
+          >
             {!isSelected && onChoose && (
               <button
                 onClick={onChoose}
                 disabled={isChoosingPending}
                 className="flex-1 py-1.5 text-[10px] font-bold wc-mono uppercase tracking-wider transition-colors disabled:opacity-50"
-                style={{
-                  background: cat.color + '14',
-                  color: cat.color,
-                  border: `1px solid ${cat.color}33`,
-                }}
+                style={{ background: cat.color + '14', color: cat.color, border: `1px solid ${cat.color}33` }}
               >
                 {isChoosingPending ? 'Choosing…' : 'Choose'}
               </button>
