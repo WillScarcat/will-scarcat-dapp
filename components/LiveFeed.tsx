@@ -1,7 +1,7 @@
 import { LivePing } from './LivePing'
 import { ExternalLink } from 'lucide-react'
 
-const TRACKER: string | undefined = undefined // deploying soon
+const TRACKER = process.env.NEXT_PUBLIC_TRACKER || undefined
 const EXPLORER = 'https://robinhoodchain.blockscout.com'
 
 type TxItem = {

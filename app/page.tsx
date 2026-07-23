@@ -55,7 +55,7 @@ export default function Home() {
           {[
             { step: '01', title: 'Add Robinhood Chain', desc: 'Chain ID 4663 · RPC: rpc.mainnet.chain.robinhood.com' },
             { step: '02', title: 'Bridge ETH', desc: 'Bridge ETH to Robinhood Chain via the official bridge.' },
-            { step: '03', title: 'Buy $WILL', desc: 'CA deploying soon — swap on any Robinhood DEX once live.' },
+            { step: '03', title: 'Buy $WILL', desc: 'CA: 0x3bfb…137c — swap ETH for $WILL on any Robinhood Chain DEX.' },
             { step: '04', title: 'Pick Your Cat', desc: 'Connect on /dapp, choose your faction, start earning.' },
           ].map(item => (
             <div

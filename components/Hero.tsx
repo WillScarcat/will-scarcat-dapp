@@ -1,6 +1,12 @@
+'use client'
+
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Copy, ExternalLink, CheckCircle } from 'lucide-react'
 import { LivePing } from './LivePing'
+import { useState } from 'react'
+
+const WILL_CA  = '0x3bfb420ccd9724201fe1e96d4e1a4ad89c94137c'
+const EXPLORER = `https://robinhoodchain.blockscout.com/token/${WILL_CA}`
 
 const BADGES = [
   { label: '● LIVE', accent: true },
@@ -9,6 +15,12 @@ const BADGES = [
 ]
 
 export default function Hero() {
+  const [copied, setCopied] = useState(false)
+  function copy() {
+    navigator.clipboard.writeText(WILL_CA)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   return (
     <section className="relative min-h-screen flex flex-col justify-center px-4 sm:px-6 pt-10 pb-12 max-w-6xl mx-auto">
@@ -57,20 +69,35 @@ export default function Hero() {
             CashCat auto-distributes if you don&apos;t pick.
           </p>
 
-          {/* CA box — deploying soon */}
+          {/* CA box */}
           <div className="glass-card flex items-center mb-8 max-w-md overflow-hidden">
             <span
               className="wc-mono text-[10px] font-bold uppercase tracking-widest px-3 py-2.5 shrink-0"
-              style={{
-                color: 'rgba(204,255,0,0.5)',
-                borderRight: '1px solid rgba(255,255,255,0.08)',
-              }}
+              style={{ color: 'rgba(204,255,0,0.5)', borderRight: '1px solid rgba(255,255,255,0.08)' }}
             >
               $WILL CA
             </span>
-            <span className="wc-mono text-[10px] text-gray-600 px-3 flex-1 italic">
-              Deploying Soon
+            <span className="wc-mono text-[10px] text-gray-400 px-3 flex-1 truncate">
+              {WILL_CA.slice(0, 6)}…{WILL_CA.slice(-4)}
             </span>
+            <button
+              onClick={copy}
+              title="Copy contract address"
+              className="px-2.5 py-2.5 transition-colors hover:text-white shrink-0"
+              style={{ color: copied ? '#22c55e' : 'rgba(255,255,255,0.3)', borderLeft: '1px solid rgba(255,255,255,0.08)' }}
+            >
+              {copied ? <CheckCircle size={12} /> : <Copy size={12} />}
+            </button>
+            <a
+              href={EXPLORER}
+              target="_blank"
+              rel="noreferrer"
+              title="View on Blockscout"
+              className="px-2.5 py-2.5 transition-colors hover:text-white shrink-0"
+              style={{ color: 'rgba(255,255,255,0.3)', borderLeft: '1px solid rgba(255,255,255,0.08)' }}
+            >
+              <ExternalLink size={12} />
+            </a>
           </div>
 
           {/* CTA buttons */}

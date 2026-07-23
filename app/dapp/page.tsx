@@ -19,11 +19,14 @@ function CopyButton({ text }: { text: string }) {
   )
 }
 
+const WILL_CA   = '0x3bfb420ccd9724201fe1e96d4e1a4ad89c94137c'
+const TRACKER_CA = '0x7fcaf2b0780f5c795de393401458635724890075'
+
 const CONTRACT_STATS = [
-  { label: 'Contract', value: '', display: 'Deploying Soon', copyable: false },
-  { label: 'Tracker',  value: '', display: 'Deploying Soon', copyable: false },
-  { label: 'Chain ID', value: '4663', display: '4663', copyable: false },
-  { label: 'Network',  value: 'Robinhood Chain', display: 'Robinhood Chain', copyable: false },
+  { label: 'Contract', value: WILL_CA,    display: `${WILL_CA.slice(0,6)}…${WILL_CA.slice(-4)}`,    copyable: true },
+  { label: 'Tracker',  value: TRACKER_CA, display: `${TRACKER_CA.slice(0,6)}…${TRACKER_CA.slice(-4)}`, copyable: true },
+  { label: 'Chain ID', value: '4663',              display: '4663',              copyable: false },
+  { label: 'Network',  value: 'Robinhood Chain',   display: 'Robinhood Chain',   copyable: false },
 ]
 
 const STEPS = [

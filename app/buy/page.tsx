@@ -23,10 +23,10 @@ const STEPS = [
   {
     step: '03',
     title: 'Buy $WILL on a DEX',
-    body: 'Contract deploying soon — once live, swap ETH for $WILL on any Robinhood Chain DEX.',
+    body: 'Swap ETH for $WILL on any Robinhood Chain DEX. Use the contract address below.',
     details: [
-      { label: 'Token', value: '$WILL' },
-      { label: 'Contract', value: 'Deploying Soon' },
+      { label: 'Token',    value: '$WILL' },
+      { label: 'Contract', value: '0x3bfb420ccd9724201fe1e96d4e1a4ad89c94137c' },
     ],
   },
   {
@@ -130,10 +130,19 @@ export default function BuyPage() {
           >
             $WILL Contract Address
           </div>
-          <div className="px-4 py-3">
-            <span className="wc-mono text-xs text-gray-600 italic">
-              TBD — deploying soon on Robinhood Chain
+          <div className="px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
+            <span className="wc-mono text-xs text-gray-300 break-all">
+              0x3bfb420ccd9724201fe1e96d4e1a4ad89c94137c
             </span>
+            <a
+              href="https://robinhoodchain.blockscout.com/token/0x3bfb420ccd9724201fe1e96d4e1a4ad89c94137c"
+              target="_blank"
+              rel="noreferrer"
+              className="wc-mono text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shrink-0 hover:text-white transition-colors"
+              style={{ color: '#CCFF00' }}
+            >
+              Blockscout ↗
+            </a>
           </div>
         </div>
       </div>
