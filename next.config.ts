@@ -15,6 +15,13 @@ const nextConfig: NextConfig = {
     root: path.resolve(__dirname),
   },
   serverExternalPackages: ['@coinbase/cdp-sdk', '@base-org/account'],
+  webpack: (config) => {
+    config.watchOptions = {
+      ...config.watchOptions,
+      ignored: ['**/node_modules/**', '**/crown-herald/**'],
+    }
+    return config
+  },
 }
 
 export default withPWA(nextConfig)
