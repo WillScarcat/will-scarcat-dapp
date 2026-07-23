@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAccount } from 'wagmi'
-import { Home, LayoutDashboard, Cat, Coins, ShoppingBag, BookOpen, Map, HelpCircle, ExternalLink, MessageCircle } from 'lucide-react'
+import { Home, LayoutDashboard, Cat, Coins, ShoppingBag, BookOpen, Map, HelpCircle, ExternalLink, MessageCircle, Terminal } from 'lucide-react'
 
 const SOCIALS = [
   { href: 'https://github.com/WillScarcat', label: 'GitHub', icon: ExternalLink },
@@ -12,9 +12,9 @@ const SOCIALS = [
 
 const NAV = [
   { href: '/',         label: 'Home',       icon: Home },
-  { href: '/dapp',     label: 'Terminal',   icon: LayoutDashboard },
+  { href: '/dapp',     label: 'Claim',      icon: Coins },
   { href: '/cats',     label: 'Cats',       icon: Cat },
-  { href: '/rewards',  label: 'Rewards',    icon: Coins },
+  { href: '/intel',    label: 'Intel',      icon: Terminal },
   { href: '/buy',      label: 'How to Buy', icon: ShoppingBag },
   { href: '/roadmap',  label: 'Roadmap',    icon: Map },
   { href: '/faq',      label: 'FAQ',        icon: HelpCircle },

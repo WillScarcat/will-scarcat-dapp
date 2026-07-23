@@ -1,25 +1,63 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 @theme {
-  /* Smoke palette — remaps wc-* tokens to new aesthetic */
+  /* ── Smoke scale (9 steps, ~7% brightness delta each) ── */
+  --color-smoke-0: #08090a;
+  --color-smoke-1: #0f0f12;
+  --color-smoke-2: #14141a;
+  --color-smoke-3: #1a1a24;
+  --color-smoke-4: #20202c;
+  --color-smoke-5: #282838;
+  --color-smoke-6: #363650;
+  --color-smoke-7: #4a4a70;
+  --color-smoke-8: #8888a8;
+  --color-smoke-9: #ffffff;
+
+  /* Legacy aliases (preserved for backwards compat) */
   --color-wc-black:  #0f0f12;
-  --color-wc-dark:   #16161c;
-  --color-wc-card:   #1e1e28;
-  --color-wc-border: #252530;
-  --color-wc-muted:  #6b7280;
+  --color-wc-dark:   #14141a;
+  --color-wc-card:   #1a1a24;
+  --color-wc-border: #282838;
+  --color-wc-muted:  #8888a8;
   --color-wc-green:  #CCFF00;
   --color-wc-text:   #ffffff;
 
-  /* New smoke tokens */
-  --color-smoke:    #0f0f12;
-  --color-smoke-2:  #16161c;
-  --color-smoke-3:  #1e1e28;
-  --color-smoke-4:  #252530;
+  /* ── Brand ── */
+  --color-green:    #CCFF00;
+  --color-green-90: #c7f500;
+  --color-green-80: #b8e500;
   --color-green-10: rgba(204,255,0,0.10);
+  --color-green-6:  rgba(204,255,0,0.06);
+  --color-green-3:  rgba(204,255,0,0.03);
   --color-green-20: rgba(204,255,0,0.20);
 
-  --font-sans: 'Inter', sans-serif;
+  /* ── Semantic ── */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger:  #ef4444;
+  --color-info:    #60a5fa;
+  --color-success-bg: rgba(34,197,94,0.08);
+  --color-warning-bg: rgba(245,158,11,0.08);
+  --color-danger-bg:  rgba(239,68,68,0.08);
+  --color-info-bg:    rgba(96,165,250,0.08);
+
+  /* ── Radius system ── */
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-xl:   20px;
+  --radius-2xl:  28px;
+
+  /* ── Duration scale ── */
+  --duration-instant: 80ms;
+  --duration-fast:    150ms;
+  --duration-normal:  220ms;
+  --duration-slow:    350ms;
+  --duration-xslow:   500ms;
+
+  /* ── Fonts (Geist loaded via next/font in layout.tsx) ── */
+  --font-sans: var(--font-geist-sans), 'Inter', system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), 'Courier New', monospace;
 }
 
 :root {
@@ -30,17 +68,18 @@
 * { box-sizing: border-box; }
 
 body {
-  background-color: #0f0f12;
+  background-color: #08090a;
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(204,255,0,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(100,100,200,0.04) 0%, transparent 50%);
+    radial-gradient(ellipse 60% 40% at 50% -10%, rgba(204,255,0,0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 90% 90%, rgba(100,100,200,0.03) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 20% at 10% 80%, rgba(204,255,0,0.02) 0%, transparent 50%);
   color: #ffffff;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
 /* ── Terminal utilities ── */
-.wc-mono  { font-family: 'Courier New', Courier, monospace; }
+.wc-mono  { font-family: var(--font-mono); }
 .wc-upper { text-transform: uppercase; letter-spacing: 0.15em; }
 
 .wc-badge {
@@ -51,7 +90,7 @@ body {
   border: 1px solid;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   line-height: 1.4;
 }
 .wc-badge-green { border-color: #CCFF00; color: #CCFF00; }
@@ -83,6 +122,66 @@ body {
 .text-glow {
   text-shadow: 0 0 20px rgba(204,255,0,0.4);
 }
+
+/* ── Skeleton loading ── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.skeleton-pulse {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.08) 50%,
+    rgba(255,255,255,0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  border-radius: 6px;
+}
+.skeleton-line  { height: 12px; margin-bottom: 6px; }
+.skeleton-avatar { width: 48px; height: 48px; border-radius: 10px; }
+.skeleton-card  { border-radius: 14px; min-height: 80px; }
+
+/* ── Toast ── */
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);    }
+}
+@keyframes toast-out {
+  from { opacity: 1; transform: translateY(0)   scale(1);    }
+  to   { opacity: 0; transform: translateY(4px) scale(0.96); }
+}
+.toast-container {
+  position: fixed;
+  bottom: calc(72px + 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: calc(100vw - 32px);
+  width: 360px;
+  pointer-events: none;
+}
+.toast {
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #1a1a24;
+  border: 1px solid #282838;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13px;
+  line-height: 1.5;
+  pointer-events: auto;
+  animation: toast-in 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.toast-success { border-color: rgba(34,197,94,0.3);  color: #22c55e; }
+.toast-error   { border-color: rgba(239,68,68,0.3);   color: #ef4444; }
+.toast-info    { border-color: rgba(96,165,250,0.3);  color: #60a5fa; }
+.toast span    { color: #ffffff; }
 
 /* ── Marquee ── */
 @keyframes marquee {
@@ -233,7 +332,7 @@ body {
 
   .claim-all-btn {
     position: fixed !important;
-    bottom: 72px;
+    bottom: calc(56px + env(safe-area-inset-bottom) + 8px);
     left: 16px;
     right: 16px;
     width: auto !important;
@@ -264,11 +363,103 @@ body {
   to   { opacity: 1; transform: translateY(0);   }
 }
 
+/* ── Typography ── */
+.hero-title  { letter-spacing: -0.04em; }
+.stat-value  { letter-spacing: -0.02em; font-family: var(--font-mono); }
+
 /* ── Mobile typography ── */
 @media (max-width: 768px) {
   .hero-title    { font-size: clamp(2.5rem, 12vw, 4rem) !important; }
   .section-title { font-size: 1.5rem; }
   .stat-value    { font-size: 1.8rem; }
+}
+
+/* ── Confetti + Reward Moment ── */
+@keyframes confetti-fall {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(60px) rotate(720deg); opacity: 0; }
+}
+.confetti-container {
+  position: absolute;
+  top: 16px; left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+.confetti-particle {
+  position: absolute;
+  width: 6px; height: 6px;
+  border-radius: 1px;
+  animation: confetti-fall 800ms ease-out forwards;
+}
+
+.reward-moment-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.reward-moment-card {
+  position: relative;
+  background: #1a1a24;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  padding: 32px 40px 28px;
+  text-align: center;
+  max-width: 320px;
+  width: 100%;
+  overflow: hidden;
+}
+.reward-moment-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin: 16px 0 6px;
+  font-family: var(--font-mono);
+}
+.reward-moment-amount {
+  font-size: 36px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.share-links {
+  display: flex;
+  gap: 8px;
+  overflow: hidden;
+}
+.share-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+}
+.share-btn-purple {
+  background: rgba(139,92,246,0.1);
+  border-color: rgba(139,92,246,0.3);
+  color: #a78bfa;
 }
 
 /* ── Selection + scrollbar ── */
