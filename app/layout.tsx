@@ -13,9 +13,9 @@ export const metadata: Metadata = {
   description: 'Hold $WILL, choose your cat faction, earn dividends on Robinhood Chain.',
   manifest: '/manifest.json',
   icons: {
-    icon: '/images/willlogo.jpg',
-    shortcut: '/images/willlogo.jpg',
-    apple: '/images/willlogo.jpg',
+    icon: '/images/willlogo-192.png',
+    shortcut: '/images/willlogo-192.png',
+    apple: '/images/willlogo-192.png',
   },
   appleWebApp: {
     capable: true,
@@ -42,8 +42,8 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-        <link rel="icon" href="/images/willlogo.jpg" type="image/jpeg" />
-        <link rel="apple-touch-icon" href="/images/willlogo.jpg" />
+        <link rel="icon" href="/images/willlogo-192.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="192x192" href="/images/willlogo-192.png" />
       </head>
       <body>
         <Providers>
