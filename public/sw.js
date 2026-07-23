@@ -1,7 +1,7 @@
 // Will Scarcat PWA Service Worker
-const CACHE = 'wc-v1'
+const CACHE = 'wc-v2'
 const OFFLINE = '/offline.html'
-const PRECACHE = ['/', '/dapp', OFFLINE, '/manifest.json', '/images/willlogo.jpg']
+const PRECACHE = ['/', '/dapp', '/cats', '/intel', OFFLINE, '/manifest.json', '/images/willlogo.jpg']
 
 self.addEventListener('install', (e) => {
   e.waitUntil(

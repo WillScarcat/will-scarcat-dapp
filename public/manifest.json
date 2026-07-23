@@ -1,32 +1,47 @@
 {
   "name": "Will Scarcat — Pick Your Cat",
   "short_name": "Will Scarcat",
-  "description": "Hold $WILL, pick your cat, earn rewards automatically",
+  "description": "Hold $WILL, choose your cat faction, earn block rewards on Robinhood Chain.",
   "start_url": "/dapp",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#0a0a0a",
+  "background_color": "#08090a",
   "theme_color": "#CCFF00",
-  "orientation": "portrait",
+  "orientation": "portrait-primary",
   "icons": [
     {
       "src": "/images/willlogo.jpg",
       "sizes": "192x192",
       "type": "image/jpeg",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "/images/willlogo.jpg",
       "sizes": "512x512",
       "type": "image/jpeg",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ],
   "categories": ["finance", "utilities"],
   "shortcuts": [
     {
-      "name": "Pick Your Cat",
+      "name": "Choose a Cat",
+      "short_name": "Cats",
+      "url": "/cats",
+      "description": "Browse and select your cat faction"
+    },
+    {
+      "name": "Claim Rewards",
+      "short_name": "Claim",
       "url": "/dapp",
-      "description": "Choose your reward cat"
+      "description": "Claim your block rewards"
+    },
+    {
+      "name": "SCARCAT Intel",
+      "short_name": "Intel",
+      "url": "/intel",
+      "description": "Live on-chain terminal"
     }
-  ]
+  ],
+  "prefer_related_applications": false
 }
