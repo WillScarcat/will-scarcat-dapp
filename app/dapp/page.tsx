@@ -2,31 +2,12 @@
 
 import RewardsDashboard from '@/components/RewardsDashboard'
 import { SectionDivider } from '@/components/SectionDivider'
-import { Copy, CheckCircle } from 'lucide-react'
-import { useState } from 'react'
-
-function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false)
-  function handleCopy() {
-    navigator.clipboard.writeText(text)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-  return (
-    <button onClick={handleCopy} className="ml-2 text-wc-muted hover:text-wc-green transition-colors" title="Copy">
-      {copied ? <CheckCircle size={12} className="text-green-400" /> : <Copy size={12} />}
-    </button>
-  )
-}
-
-const WILL_CA   = '0x3bfb420ccd9724201fe1e96d4e1a4ad89c94137c'
-const TRACKER_CA = '0x7fcaf2b0780f5c795de393401458635724890075'
 
 const CONTRACT_STATS = [
-  { label: 'Contract', value: WILL_CA,    display: `${WILL_CA.slice(0,6)}…${WILL_CA.slice(-4)}`,    copyable: true },
-  { label: 'Tracker',  value: TRACKER_CA, display: `${TRACKER_CA.slice(0,6)}…${TRACKER_CA.slice(-4)}`, copyable: true },
-  { label: 'Chain ID', value: '4663',              display: '4663',              copyable: false },
-  { label: 'Network',  value: 'Robinhood Chain',   display: 'Robinhood Chain',   copyable: false },
+  { label: 'Contract', value: '', display: 'TBA', copyable: false },
+  { label: 'Tracker',  value: '', display: 'TBA', copyable: false },
+  { label: 'Chain ID', value: '4663',            display: '4663',            copyable: false },
+  { label: 'Network',  value: 'Robinhood Chain', display: 'Robinhood Chain', copyable: false },
 ]
 
 const STEPS = [
@@ -60,7 +41,6 @@ export default function DappPage() {
                 <span className="wc-mono wc-upper text-[9px] text-wc-muted">{stat.label}</span>
                 <div className="flex items-center">
                   <span className="wc-mono text-[11px] text-wc-text">{stat.display}</span>
-                  {stat.copyable && <CopyButton text={stat.value} />}
                 </div>
               </div>
             ))}

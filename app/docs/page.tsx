@@ -14,12 +14,12 @@ const CHAIN = [
 const CONTRACTS = [
   {
     label: '$WILL Token',
-    address: '0x3bfb420ccd9724201fe1e96d4e1a4ad89c94137c',
+    address: null,
     description: 'ERC-20 dividend-distributing token. Hold to earn.',
   },
   {
     label: 'Tracker',
-    address: '0x7fcaf2b0780f5c795de393401458635724890075',
+    address: null,
     description: 'Dividend tracker — call chooseCat() and withdrawDividend().',
   },
 ]
