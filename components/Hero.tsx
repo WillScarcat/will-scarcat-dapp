@@ -26,7 +26,7 @@ export default function Hero() {
 
           {/* Headline */}
           <h1
-            className="font-black leading-[0.92] tracking-[-0.04em] mb-6"
+            className="hero-title font-black leading-[0.92] tracking-[-0.04em] mb-6"
             style={{ fontSize: 'clamp(3rem, 8vw, 7rem)' }}
           >
             <span className="text-white block">THE WILL</span>

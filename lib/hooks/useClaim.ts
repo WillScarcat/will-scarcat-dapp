@@ -17,5 +17,5 @@ export function useClaim() {
     })
   }
 
-  return { claim, isPending: isPending || isConfirming, isSuccess, error, hash, reset }
+  return { claim, isSigning: isPending, isConfirming, isPending: isPending || isConfirming, isSuccess, error, hash, reset }
 }

@@ -1,10 +1,14 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import { useAccount, useChainId, useSwitchChain } from 'wagmi'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-import { Cat, Loader2, CheckCircle, X, AlertTriangle } from 'lucide-react'
+import { Cat, Loader2, AlertTriangle } from 'lucide-react'
 import CatCard from './CatCard'
+import { SkeletonCard } from './Skeleton'
+import { RewardMoment } from './RewardMoment'
+import { useToast } from './Toast'
 import { CATS } from '@/lib/contracts'
 import { robinhoodChain } from '@/lib/wagmi'
 import { useWillBalance } from '@/lib/hooks/useWillBalance'
@@ -22,17 +26,63 @@ export default function RewardsDashboard() {
 
   const { formatted: willBalance } = useWillBalance(address)
   const { cat: currentCat } = useCurrentCat(address)
-  const { rewards, refetch } = useRewards(address)
+  const { rewards, isLoading: isRewardsLoading, refetch } = useRewards(address)
   const { chooseCat, isPending: isChoosePending, isSuccess: isChooseSuccess, error: chooseError } = useChooseCat()
-  const { claim, isPending: isClaimPending, isSuccess: isClaimSuccess, error: claimError, reset: resetClaim } = useClaim()
+  const {
+    claim,
+    isSigning,
+    isConfirming,
+    isPending: isClaimPending,
+    isSuccess: isClaimSuccess,
+    error: claimError,
+    reset: resetClaim,
+  } = useClaim()
   const { stats: catStats } = useCatStats()
+  const { toast } = useToast()
+
+  const [pendingClaimAmount, setPendingClaimAmount] = useState(0)
+  const [showRewardMoment, setShowRewardMoment] = useState(false)
+
+  const totalClaimable = rewards.reduce((acc, r) => acc + r.amount, 0)
+
+  const claimState: 'idle' | 'signing' | 'confirming' | 'confirmed' =
+    isClaimSuccess && !isClaimPending ? 'confirmed'
+    : isConfirming ? 'confirming'
+    : isSigning ? 'signing'
+    : 'idle'
+
+  const claimAllLabel = {
+    idle:       `Claim All (${totalClaimable.toFixed(6)} ${currentCat?.ticker ?? 'tokens'})`,
+    signing:    'Signing...',
+    confirming: 'Confirming...',
+    confirmed:  '✓ Claimed!',
+  }[claimState]
 
   useEffect(() => {
     if (isClaimSuccess) {
-      navigator.vibrate?.(200)
+      navigator.vibrate?.([50, 30, 50, 30, 100])
+      setShowRewardMoment(true)
+      toast(`Claimed ${pendingClaimAmount.toFixed(4)} ${currentCat?.ticker ?? 'tokens'}!`, 'success')
       refetch()
     }
-  }, [isClaimSuccess, refetch])
+  }, [isClaimSuccess]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (isChooseSuccess) toast(`Switched to ${currentCat?.ticker ?? 'cat'}!`, 'success')
+  }, [isChooseSuccess]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (chooseError) toast('Transaction failed. Try again.', 'error')
+  }, [chooseError]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (claimError) toast('Claim failed. Try again.', 'error')
+  }, [claimError]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  function handleClaim() {
+    setPendingClaimAmount(totalClaimable)
+    claim()
+  }
 
   if (!isConnected) {
     return (
@@ -68,130 +118,117 @@ export default function RewardsDashboard() {
     )
   }
 
-  const totalClaimable = rewards.reduce((acc, r) => acc + r.amount, 0)
-
   return (
-    <div className="space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-wc-border pb-4">
-        <div>
-          <div className="wc-mono wc-upper text-[9px] text-wc-muted mb-1">$WILL Balance</div>
-          <div className="wc-mono text-xl font-bold text-wc-green">
-            {willBalance ?? '—'} WILL
-          </div>
-        </div>
-        <ConnectButton accountStatus="avatar" chainStatus="none" showBalance={false} />
-      </div>
-
-      {/* Active cat banner */}
-      {currentCat ? (
-        <div className="active-cat-banner">
-          <img
-            src={currentCat.img}
-            alt={currentCat.name}
-            className="w-10 h-10 rounded-xl object-cover shrink-0"
-          />
-          <div className="flex-1 min-w-0">
-            <div className="text-[9px] uppercase tracking-widest text-gray-500">Active Cat</div>
-            <div className="font-bold text-sm" style={{ color: currentCat.color }}>
-              ${currentCat.ticker}
+    <>
+      <div className="space-y-5">
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-wc-border pb-4">
+          <div>
+            <div className="wc-mono wc-upper text-[9px] text-wc-muted mb-1">$WILL Balance</div>
+            <div className="wc-mono text-xl font-bold text-wc-green">
+              {willBalance ?? '—'} WILL
             </div>
           </div>
-          <div className="text-right shrink-0">
-            <div className="text-[9px] uppercase tracking-widest text-gray-500">Claimable</div>
-            <div className="wc-mono font-bold text-xs text-white">
-              {totalClaimable > 0 ? totalClaimable.toFixed(4) : '—'}
-            </div>
-          </div>
+          <ConnectButton accountStatus="avatar" chainStatus="none" showBalance={false} />
         </div>
-      ) : (
-        <div className="border border-wc-border px-4 py-2.5 wc-mono text-[10px] text-wc-muted">
-          No cat chosen yet — CashCat distributes by default.
-        </div>
-      )}
 
-      {/* TX feedback */}
-      {isChoosePending && (
-        <div className="flex items-center gap-2 wc-mono text-[10px] text-wc-muted border border-wc-border px-3 py-2">
-          <Loader2 className="w-3 h-3 animate-spin" />
-          Switching cat...
-        </div>
-      )}
-      {isChooseSuccess && !isChoosePending && (
-        <div className="flex items-center gap-2 wc-mono text-[10px] text-green-400 border border-green-400/20 px-3 py-2">
-          <CheckCircle className="w-3 h-3" />
-          Cat switched!
-        </div>
-      )}
-      {chooseError && (
-        <div className="flex items-center gap-2 wc-mono text-[10px] text-red-400 border border-red-400/20 px-3 py-2">
-          <X className="w-3 h-3" />
-          Transaction failed
-        </div>
-      )}
-
-      {/* Cat grid */}
-      <div className="cat-grid grid grid-cols-3 gap-3">
-        {CATS.map(cat => {
-          const reward = rewards.find(r => r.cat.id === cat.id)
-          const weightEntry = catStats.find(s => s.cat.id === cat.id)
-          return (
-            <CatCard
-              key={cat.id}
-              cat={cat}
-              isSelected={currentCat?.id === cat.id}
-              claimable={reward?.formatted}
-              weightPct={weightEntry?.pct}
-              showActions
-              onChoose={() => chooseCat(cat.address)}
-              onClaim={() => claim()}
-              isChoosingPending={isChoosePending}
-              isClaimPending={isClaimPending}
+        {/* Active cat banner */}
+        {currentCat ? (
+          <div className="active-cat-banner">
+            <img
+              src={currentCat.img}
+              alt={currentCat.name}
+              className="w-10 h-10 rounded-xl object-cover shrink-0"
             />
-          )
-        })}
+            <div className="flex-1 min-w-0">
+              <div className="text-[9px] uppercase tracking-widest text-gray-500">Active Cat</div>
+              <div className="font-bold text-sm" style={{ color: currentCat.color }}>
+                ${currentCat.ticker}
+              </div>
+            </div>
+            <div className="text-right shrink-0">
+              <div className="text-[9px] uppercase tracking-widest text-gray-500">Claimable</div>
+              <div className="wc-mono font-bold text-xs text-white">
+                {totalClaimable > 0 ? totalClaimable.toFixed(4) : '—'}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="border border-wc-border px-4 py-2.5 wc-mono text-[10px] text-wc-muted">
+            No cat chosen yet — CashCat distributes by default.
+          </div>
+        )}
+
+        {/* TX state feedback */}
+        {claimState === 'signing' && (
+          <div className="flex items-center gap-2 wc-mono text-[10px] text-wc-muted border border-wc-border px-3 py-2">
+            <Loader2 className="w-3 h-3 animate-spin" />
+            Waiting for wallet signature...
+          </div>
+        )}
+        {claimState === 'confirming' && (
+          <div className="flex items-center gap-2 wc-mono text-[10px] border px-3 py-2 animate-pulse"
+            style={{ color: '#CCFF00', borderColor: 'rgba(204,255,0,0.2)' }}>
+            <Loader2 className="w-3 h-3 animate-spin" />
+            Confirming on Robinhood Chain...
+          </div>
+        )}
+        {isChoosePending && (
+          <div className="flex items-center gap-2 wc-mono text-[10px] text-wc-muted border border-wc-border px-3 py-2">
+            <Loader2 className="w-3 h-3 animate-spin" />
+            Switching cat...
+          </div>
+        )}
+
+        {/* Cat grid — skeleton while loading */}
+        <div className="cat-grid grid grid-cols-3 gap-3">
+          {isRewardsLoading
+            ? Array.from({ length: 9 }).map((_, i) => <SkeletonCard key={i} />)
+            : CATS.map(cat => {
+                const reward = rewards.find(r => r.cat.id === cat.id)
+                const weightEntry = catStats.find(s => s.cat.id === cat.id)
+                return (
+                  <CatCard
+                    key={cat.id}
+                    cat={cat}
+                    isSelected={currentCat?.id === cat.id}
+                    claimable={reward?.formatted}
+                    weightPct={weightEntry?.pct}
+                    showActions
+                    onChoose={() => chooseCat(cat.address)}
+                    onClaim={handleClaim}
+                    isChoosingPending={isChoosePending}
+                    isClaimPending={isClaimPending}
+                  />
+                )
+              })
+          }
+        </div>
+
+        {/* Claim All */}
+        {totalClaimable > 0 && (
+          <button
+            onClick={handleClaim}
+            disabled={isClaimPending || claimState === 'confirmed'}
+            className="claim-all-btn w-full bg-wc-green py-3 font-bold text-black text-sm wc-mono wc-upper hover:bg-[#b8e600] transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            {isClaimPending && <Loader2 className="w-4 h-4 animate-spin" />}
+            {claimAllLabel}
+          </button>
+        )}
       </div>
 
-      {/* Claim feedback */}
-      {isClaimPending && (
-        <div className="flex items-center gap-2 wc-mono text-[10px] text-wc-muted border border-wc-border px-3 py-2">
-          <Loader2 className="w-3 h-3 animate-spin" />
-          Claiming...
-        </div>
-      )}
-      {isClaimSuccess && !isClaimPending && (
-        <div className="flex items-center justify-between wc-mono text-[10px] text-green-400 border border-green-400/20 px-3 py-2">
-          <div className="flex items-center gap-2">
-            <CheckCircle className="w-3 h-3" />
-            Claimed successfully!
-          </div>
-          <button onClick={resetClaim}><X className="w-3 h-3 text-wc-muted" /></button>
-        </div>
-      )}
-      {claimError && !isClaimPending && (
-        <div className="flex items-center justify-between wc-mono text-[10px] text-red-400 border border-red-400/20 px-3 py-2">
-          <div className="flex items-center gap-2">
-            <X className="w-3 h-3" />
-            Claim failed
-          </div>
-          <button onClick={resetClaim}><X className="w-3 h-3 text-wc-muted" /></button>
-        </div>
-      )}
-
-      {/* Claim All — fixed on mobile, inline on desktop */}
-      {totalClaimable > 0 && (
-        <button
-          onClick={() => claim()}
-          disabled={isClaimPending}
-          className="claim-all-btn w-full bg-wc-green py-3 font-bold text-black text-sm wc-mono wc-upper hover:bg-[#b8e600] transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-        >
-          {isClaimPending ? (
-            <><Loader2 className="w-4 h-4 animate-spin" />Claiming...</>
-          ) : (
-            `Claim All (${totalClaimable.toFixed(6)} ${currentCat?.ticker ?? 'tokens'})`
-          )}
-        </button>
-      )}
-    </div>
+      {/* Reward moment overlay */}
+      <AnimatePresence>
+        {showRewardMoment && currentCat && (
+          <RewardMoment
+            amount={pendingClaimAmount}
+            ticker={currentCat.ticker}
+            catColor={currentCat.color}
+            onClose={() => { setShowRewardMoment(false); resetClaim() }}
+          />
+        )}
+      </AnimatePresence>
+    </>
   )
 }

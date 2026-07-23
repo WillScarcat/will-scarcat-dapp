@@ -7,7 +7,7 @@ export function SectionDivider({ label }: { label: string }) {
       />
       <span
         className="text-[10px] font-bold tracking-[0.3em] uppercase shrink-0"
-        style={{ color: 'rgba(204,255,0,0.6)' }}
+        style={{ color: '#666' }}
       >
         {label}
       </span>

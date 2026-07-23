@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { ArrowRight, Repeat, Coins, Cat, Zap } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
+import { RewardsScrollFlow } from '@/components/RewardsScrollFlow'
 
 const FLOW = [
   { label: 'SWAP', sub: 'DEX Trade' },
@@ -9,32 +10,6 @@ const FLOW = [
   { label: 'WALLET', sub: 'Your ETH' },
 ]
 
-const STEPS = [
-  {
-    icon: Repeat,
-    title: 'Swap happens on Robinhood Chain',
-    body: 'Every $WILL buy or sell on any DEX on Robinhood Chain triggers a tax on the transaction.',
-    accent: false,
-  },
-  {
-    icon: Zap,
-    title: 'Tax is captured by the Tracker',
-    body: 'The Tracker contract collects the tax and logs the weight of each $WILL holder per faction.',
-    accent: false,
-  },
-  {
-    icon: Cat,
-    title: 'Weight routes to your cat',
-    body: 'Your $WILL balance determines your weight. If you picked a cat, your weight goes to that faction\'s reward pool.',
-    accent: false,
-  },
-  {
-    icon: Coins,
-    title: 'Claim any time — no lock-up',
-    body: 'Open the Terminal, hit Claim, and your earned dividends land in your wallet instantly. Switch cats any time with no penalty.',
-    accent: true,
-  },
-]
 
 export default function RewardsPage() {
   return (
@@ -118,40 +93,8 @@ export default function RewardsPage() {
           `}</style>
         </div>
 
-        {/* Flow steps */}
-        <div className="space-y-3 mb-10">
-          {STEPS.map((step, i) => (
-            <div key={i} className="glass-card flex gap-5 p-5">
-              {/* Step number + connector */}
-              <div className="flex flex-col items-center gap-2 shrink-0">
-                <div
-                  className="w-9 h-9 flex items-center justify-center"
-                  style={{
-                    border: `1px solid ${step.accent ? '#CCFF00' : 'rgba(255,255,255,0.1)'}`,
-                    background: step.accent ? 'rgba(204,255,0,0.08)' : 'rgba(255,255,255,0.03)',
-                  }}
-                >
-                  <step.icon
-                    size={16}
-                    style={{ color: step.accent ? '#CCFF00' : '#4b5563' }}
-                  />
-                </div>
-                {i < STEPS.length - 1 && (
-                  <div className="w-px flex-1" style={{ background: 'rgba(255,255,255,0.06)', minHeight: 20 }} />
-                )}
-              </div>
-              <div className="pt-1.5 min-w-0">
-                <div
-                  className="font-bold text-sm mb-1.5"
-                  style={{ color: step.accent ? '#CCFF00' : '#ffffff' }}
-                >
-                  {`0${i + 1}. `}{step.title}
-                </div>
-                <p className="text-gray-500 text-xs leading-relaxed">{step.body}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* Flow steps — GSAP ScrollTrigger animated */}
+        <RewardsScrollFlow />
 
         {/* Key numbers */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-10">

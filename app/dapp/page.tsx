@@ -41,7 +41,7 @@ export default function DappPage() {
         {/* Left panel — 40% */}
         <div className="lg:w-2/5 space-y-6 mb-8 lg:mb-0">
           <div>
-            <div className="wc-mono wc-upper text-[10px] text-wc-green mb-3">Robinhood Chain</div>
+            <div className="wc-mono wc-upper text-[10px] text-gray-500 mb-3">Robinhood Chain</div>
             <h1 className="wc-mono font-bold uppercase leading-none text-4xl mb-4">
               Will<br /><span className="text-wc-green">Scarcat</span>
             </h1>
