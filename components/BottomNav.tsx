@@ -44,9 +44,8 @@ export default function BottomNav() {
             </span>
             {isActive && (
               <span
-                className="absolute bottom-[6px] left-1/2 -translate-x-1/2 rounded-[1px]"
+                className="nav-indicator absolute bottom-[6px] left-1/2 -translate-x-1/2 rounded-[1px]"
                 style={{
-                  width: 20,
                   height: 2,
                   background: '#CCFF00',
                   boxShadow: '0 0 6px rgba(204,255,0,0.5)',

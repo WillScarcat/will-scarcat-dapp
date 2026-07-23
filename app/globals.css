@@ -125,17 +125,45 @@ body {
 .wc-badge-gray  { border-color: #6b7280; color: #6b7280; }
 .wc-badge-white { border-color: #fff;    color: #fff;    }
 
-/* ── Glassmorphism utilities ── */
+/* ── Glassmorphism System ── */
+/* Base glass — standard card */
 .glass-card {
   background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid rgba(255,255,255,0.07);
+}
+
+/* Active glass — selected / focused */
+.glass-active {
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+/* Surface glass — nav, sidebar */
+.glass-surface {
+  background: rgba(8,9,10,0.85);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Hero glass — featured elements */
+.glass-hero {
+  background: rgba(255,255,255,0.02);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
 .glass-card-hover {
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease,
-              box-shadow 0.2s ease;
+  transition:
+    background 220ms var(--ease-inout),
+    border-color 220ms var(--ease-inout),
+    transform 220ms var(--ease-inout),
+    box-shadow 220ms var(--ease-inout);
 }
 .glass-card-hover:hover {
   background: rgba(255,255,255,0.06);
@@ -143,8 +171,25 @@ body {
   transform: translateY(-2px);
 }
 
+/* ── Elevation System ── */
+.elevation-1 {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  border: 1px solid var(--smoke-5);
+}
+.elevation-2 {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.4);
+  border: 1px solid var(--smoke-6);
+}
+.elevation-3 {
+  box-shadow: 0 24px 64px rgba(0,0,0,0.8), 0 8px 24px rgba(0,0,0,0.6);
+  border: 1px solid var(--smoke-6);
+}
+
 .glow-green {
-  box-shadow: 0 0 30px rgba(204,255,0,0.08), 0 0 60px rgba(204,255,0,0.04);
+  box-shadow: 0 0 0 1px var(--green), 0 0 20px rgba(204,255,0,0.15);
+}
+.glow-danger {
+  box-shadow: 0 0 0 1px var(--danger), 0 0 12px rgba(239,68,68,0.15);
 }
 
 .text-glow {
@@ -221,16 +266,55 @@ body {
   will-change: transform;
 }
 
-/* ── Stat entry animation ── */
+/* ── Entry / exit animations ── */
+
+/* Standard element enter */
+@keyframes enter-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes exit-up {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-4px); }
+}
+
+/* Spring pop — cat select, reward confirm, delight moments */
+@keyframes spring-pop {
+  0%   { opacity: 0; transform: scale(0.88) translateY(12px); }
+  60%  { opacity: 1; transform: scale(1.04) translateY(-2px); }
+  80%  { transform: scale(0.98) translateY(1px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+/* Counter-up (stat numbers on mount) */
 @keyframes counter-up {
   from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0);   }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Bottom nav indicator spring entry */
+@keyframes nav-indicator-enter {
+  from { width: 0; opacity: 0; }
+  to   { width: 20px; opacity: 1; }
 }
 
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; transform: scale(1); }
   50%       { opacity: 0.5; transform: scale(0.8); }
 }
+
+/* ── Animation utility classes ── */
+.animate-enter {
+  animation: enter-up 350ms var(--ease-smooth) both;
+}
+
+/* Stagger — set via inline style or nth-child in JS */
+.stagger-1 { animation-delay: 40ms; }
+.stagger-2 { animation-delay: 80ms; }
+.stagger-3 { animation-delay: 120ms; }
+.stagger-4 { animation-delay: 160ms; }
+.stagger-5 { animation-delay: 200ms; }
+.stagger-6 { animation-delay: 240ms; }
 
 /* ── iOS safe area ── */
 .bottom-nav { padding-bottom: 0; }
@@ -264,22 +348,25 @@ body {
               box-shadow 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 .cat-tilt:hover {
-  transform: perspective(1000px) translateY(-8px) rotateX(4deg) rotateY(-4deg);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 30px rgba(204,255,0,0.1);
+  /* spec: translateY(-4px), subtle 3deg tilt */
+  transform: perspective(1000px) translateY(-4px) rotateX(3deg) rotateY(-3deg);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 30px rgba(204,255,0,0.08);
 }
 
 @keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(204,255,0,0.2); }
-  50%       { box-shadow: 0 0 40px rgba(204,255,0,0.5); }
+  0%, 100% { box-shadow: 0 0 0 1px var(--cat-color, #CCFF00), 0 0 20px rgba(204,255,0,0.2); }
+  50%       { box-shadow: 0 0 0 1px var(--cat-color, #CCFF00), 0 0 40px rgba(204,255,0,0.45); }
 }
 .cat-selected {
-  animation: glow-pulse 2s ease-in-out infinite;
+  animation: glow-pulse 2.2s ease-in-out infinite;
 }
 
 .cat-buttons {
   opacity: 0;
   transform: translateY(8px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 150ms var(--ease-out),
+    transform 150ms var(--ease-out);
 }
 .cat-card-wrapper:hover .cat-buttons {
   opacity: 1;
@@ -291,7 +378,8 @@ body {
   will-change: transform;
 }
 .cat-card-wrapper:hover img {
-  transform: scale(1.1);
+  /* spec: scale(1.08), was 1.1 */
+  transform: scale(1.08);
 }
 
 .cat-card-wrapper:hover .cat-ticker {
