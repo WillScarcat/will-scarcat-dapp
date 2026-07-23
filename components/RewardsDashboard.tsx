@@ -1,10 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useAccount, useChainId, useSwitchChain } from 'wagmi'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-import { Cat, Loader2, AlertTriangle } from 'lucide-react'
+import { Cat, Check, Loader2, AlertTriangle } from 'lucide-react'
 import CatCard from './CatCard'
 import { SkeletonCard } from './Skeleton'
 import { RewardMoment } from './RewardMoment'
@@ -198,7 +198,7 @@ export default function RewardsDashboard() {
                     onChoose={() => chooseCat(cat.address)}
                     onClaim={handleClaim}
                     isChoosingPending={isChoosePending}
-                    isClaimPending={isClaimPending}
+                    claimState={claimState}
                   />
                 )
               })
@@ -207,14 +207,34 @@ export default function RewardsDashboard() {
 
         {/* Claim All */}
         {totalClaimable > 0 && (
-          <button
+          <motion.button
             onClick={handleClaim}
             disabled={isClaimPending || claimState === 'confirmed'}
-            className="claim-all-btn w-full bg-wc-green py-3 font-bold text-black text-sm wc-mono wc-upper hover:bg-[#b8e600] transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+            whileHover={claimState === 'idle' ? { scale: 1.015 } : undefined}
+            whileTap={claimState === 'idle' ? { scale: 0.985 } : undefined}
+            transition={{ type: 'spring', stiffness: 420, damping: 22 }}
+            className="claim-all-btn w-full py-3 font-bold text-sm wc-mono wc-upper disabled:opacity-50 flex items-center justify-center gap-2 rounded-[10px]"
+            style={{
+              background: claimState === 'confirmed'
+                ? 'rgba(34,197,94,0.12)'
+                : claimState === 'confirming'
+                ? 'rgba(204,255,0,0.12)'
+                : '#CCFF00',
+              color: claimState === 'confirmed'
+                ? '#22c55e'
+                : claimState === 'confirming'
+                ? '#CCFF00'
+                : '#0f0f12',
+              border: claimState === 'confirming'
+                ? '1px solid rgba(204,255,0,0.3)'
+                : 'none',
+            }}
           >
-            {isClaimPending && <Loader2 className="w-4 h-4 animate-spin" />}
+            {claimState === 'signing' && <Loader2 className="w-4 h-4 animate-spin" />}
+            {claimState === 'confirming' && <Loader2 className="w-4 h-4 animate-spin" />}
+            {claimState === 'confirmed' && <Check className="w-4 h-4" strokeWidth={3} />}
             {claimAllLabel}
-          </button>
+          </motion.button>
         )}
       </div>
 

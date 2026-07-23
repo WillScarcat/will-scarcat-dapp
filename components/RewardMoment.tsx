@@ -1,14 +1,22 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { CheckCircle, Share2, X as XIcon } from 'lucide-react'
+import { CheckCircle, X as XIcon } from 'lucide-react'
 
-const CONFETTI_COLORS = [
-  '#CCFF00', '#a855f7', '#38bdf8', '#fb923c', '#4ade80',
-  '#f87171', '#FF6B6B', '#4ECDC4', '#FFE66D', '#CCFF00',
-  '#a855f7', '#38bdf8',
+// All 9 cat faction colors — burst uses these cycling
+const CAT_COLORS = [
+  '#CCFF00', '#a855f7', '#38bdf8',
+  '#f97316', '#4ade80', '#f87171',
+  '#ff6b6b', '#4ecdc4', '#ffe66d',
+  '#CCFF00', '#a855f7', '#38bdf8',
 ]
+
+// 12 evenly-spaced burst angles (degrees, clockwise from top)
+const BURST_ANGLES = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330]
+
+const SPRING = { type: 'spring' as const, stiffness: 420, damping: 24 }
+const SMOOTH = { duration: 0.28, ease: [0.16, 1, 0.3, 1] as const }
 
 interface RewardMomentProps {
   amount: number
@@ -20,25 +28,30 @@ interface RewardMomentProps {
 export function RewardMoment({ amount, ticker, catColor, onClose }: RewardMomentProps) {
   const [displayAmount, setDisplayAmount] = useState(0)
   const [showShare, setShowShare] = useState(false)
+  const shareTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   useEffect(() => {
+    // Haptic — double tap + hold pattern
     navigator.vibrate?.([50, 30, 50, 30, 100])
 
-    const startTime = performance.now()
+    // Odometer: cubic ease-out, 600ms
+    const start = performance.now()
     const duration = 600
-
-    const animate = (now: number) => {
-      const elapsed = now - startTime
-      const t = Math.min(elapsed / duration, 1)
+    const tick = (now: number) => {
+      const t = Math.min((now - start) / duration, 1)
       const eased = 1 - Math.pow(1 - t, 3)
       setDisplayAmount(amount * eased)
-      if (t < 1) requestAnimationFrame(animate)
+      if (t < 1) requestAnimationFrame(tick)
+      else setDisplayAmount(amount) // snap to exact value
     }
+    requestAnimationFrame(tick)
 
-    requestAnimationFrame(animate)
+    // Auto-reveal share after 3s
+    shareTimerRef.current = setTimeout(() => setShowShare(true), 3000)
+    return () => clearTimeout(shareTimerRef.current)
   }, [amount])
 
-  const shareText = `I just claimed ${amount.toFixed(4)} ${ticker} on @WillScarcat! 🐾`
+  const shareText = `I just claimed ${amount.toFixed(4)} ${ticker} on Will Scarcat! 🐾`
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`
   const farcasterUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}`
 
@@ -46,99 +59,153 @@ export function RewardMoment({ amount, ticker, catColor, onClose }: RewardMoment
     <div className="reward-moment-overlay" onClick={onClose}>
       <motion.div
         className="reward-moment-card"
-        initial={{ scale: 0.88, opacity: 0, y: 16 }}
+        initial={{ scale: 0.88, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.92, opacity: 0, y: 8 }}
-        transition={{ type: 'spring', stiffness: 400, damping: 28 }}
+        exit={{ scale: 0.94, opacity: 0, y: 8 }}
+        transition={{ type: 'spring', stiffness: 380, damping: 26 }}
         onClick={e => e.stopPropagation()}
       >
-        {/* Confetti */}
-        <div className="confetti-container">
-          {CONFETTI_COLORS.map((color, i) => (
-            <div
-              key={i}
-              className="confetti-particle"
-              style={{
-                background: color,
-                left: `${(i / 12) * 100}%`,
-                top: 0,
-                animationDelay: `${i * 60}ms`,
-              }}
-            />
-          ))}
+        {/* Confetti burst — 12 particles from center */}
+        <div className="confetti-container" aria-hidden="true">
+          {CAT_COLORS.map((color, i) => {
+            const rad = BURST_ANGLES[i] * (Math.PI / 180)
+            const dist = 48 + (i % 4) * 14   // 48–90px radius variation
+            const tx = Math.round(Math.sin(rad) * dist)
+            const ty = Math.round(-Math.cos(rad) * dist) // negative = upward
+            const rot = (i % 2 === 0 ? 1 : -1) * (540 + i * 36)
+            return (
+              <div
+                key={i}
+                className="confetti-particle"
+                style={{
+                  background: color,
+                  left: '50%',
+                  top: '40%',
+                  marginLeft: -3,
+                  marginTop: -3,
+                  animationDelay: `${i * 35}ms`,
+                  ['--tx' as string]: `${tx}px`,
+                  ['--ty' as string]: `${ty}px`,
+                  ['--rot' as string]: `${rot}deg`,
+                } as React.CSSProperties}
+              />
+            )
+          })}
         </div>
 
-        {/* Close */}
+        {/* Close button */}
         <button
-          className="absolute top-4 right-4 text-gray-600 hover:text-white transition-colors"
+          className="absolute top-4 right-4 transition-opacity hover:opacity-100"
+          style={{ color: 'rgba(255,255,255,0.35)' }}
           onClick={onClose}
         >
           <XIcon size={16} />
         </button>
 
-        {/* Check icon */}
-        <CheckCircle size={40} style={{ color: catColor }} className="mx-auto" />
+        {/* Check icon — spring pop */}
+        <motion.div
+          className="mx-auto"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ ...SPRING, delay: 0.08 }}
+        >
+          <CheckCircle
+            size={44}
+            strokeWidth={1.5}
+            style={{ color: catColor, filter: `drop-shadow(0 0 12px ${catColor}66)` }}
+          />
+        </motion.div>
 
-        <div className="reward-moment-label">Claimed!</div>
+        {/* "CLAIMED!" label */}
+        <motion.div
+          className="reward-moment-label"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.18, ...SMOOTH }}
+        >
+          Claimed!
+        </motion.div>
 
-        <div className="reward-moment-amount" style={{ color: catColor }}>
+        {/* Odometer amount — Geist Mono + cat-color glow */}
+        <motion.div
+          className="reward-moment-amount"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, ...SMOOTH }}
+          style={{
+            color: catColor,
+            textShadow: `0 0 28px ${catColor}55, 0 0 60px ${catColor}22`,
+          }}
+        >
           {displayAmount.toFixed(4)}
-        </div>
-        <div
-          className="wc-mono text-sm font-bold uppercase tracking-widest mt-1"
-          style={{ color: catColor }}
+        </motion.div>
+
+        {/* Ticker */}
+        <motion.div
+          className="wc-mono text-[11px] font-bold uppercase tracking-[0.2em] mt-1"
+          style={{ color: `${catColor}99` }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.25, ...SMOOTH }}
         >
           {ticker}
-        </div>
+        </motion.div>
 
-        {/* Actions */}
-        <div className="flex gap-3 mt-6 justify-center">
-          <button
-            className="flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg wc-mono uppercase tracking-wide transition-colors"
-            style={{
-              background: 'rgba(255,255,255,0.07)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              color: 'white',
-            }}
-            onClick={() => setShowShare(s => !s)}
-          >
-            <Share2 size={12} /> Share
-          </button>
-          <button
-            className="px-4 py-2 text-xs font-medium rounded-lg wc-mono uppercase tracking-wide text-gray-500 hover:text-white transition-colors"
-            onClick={onClose}
-          >
-            Close
-          </button>
-        </div>
-
-        {/* Share links */}
-        <AnimatePresence>
-          {showShare && (
+        {/* Share section — auto-shows after 3s, or via close while waiting */}
+        <AnimatePresence mode="wait">
+          {showShare ? (
             <motion.div
-              className="share-links"
-              initial={{ opacity: 0, height: 0, marginTop: 0 }}
-              animate={{ opacity: 1, height: 'auto', marginTop: 12 }}
-              exit={{ opacity: 0, height: 0, marginTop: 0 }}
-              transition={{ duration: 0.2 }}
+              key="share"
+              className="mt-6 w-full"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 4 }}
+              transition={SMOOTH}
             >
-              <a
-                href={twitterUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="share-btn"
+              <div
+                className="wc-mono text-[9px] uppercase tracking-[0.15em] text-center mb-3"
+                style={{ color: 'rgba(255,255,255,0.28)' }}
               >
-                X / Twitter
-              </a>
-              <a
-                href={farcasterUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="share-btn share-btn-purple"
+                Share the win
+              </div>
+              <div className="share-links">
+                <a
+                  href={twitterUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="share-btn"
+                >
+                  𝕏 / Twitter
+                </a>
+                <a
+                  href={farcasterUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="share-btn share-btn-purple"
+                >
+                  Farcaster
+                </a>
+              </div>
+              <button
+                className="mt-3 w-full text-[10px] wc-mono uppercase tracking-wider transition-opacity hover:opacity-70"
+                style={{ color: 'rgba(255,255,255,0.28)' }}
+                onClick={onClose}
               >
-                Farcaster
-              </a>
+                Close
+              </button>
             </motion.div>
+          ) : (
+            <motion.button
+              key="close"
+              className="mt-6 px-5 py-2 text-[10px] wc-mono uppercase tracking-wider transition-opacity hover:opacity-70"
+              style={{ color: 'rgba(255,255,255,0.35)' }}
+              onClick={onClose}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              Close
+            </motion.button>
           )}
         </AnimatePresence>
       </motion.div>

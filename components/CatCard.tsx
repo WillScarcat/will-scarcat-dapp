@@ -1,9 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { Cat as CatIcon } from 'lucide-react'
 import type { Cat } from '@/lib/contracts'
 import { useMediaQuery } from '@/lib/hooks/useMediaQuery'
+import { ClaimButton, type ClaimState } from './ClaimButton'
 
 type Props = {
   cat: Cat
@@ -13,9 +15,11 @@ type Props = {
   onChoose?: () => void
   onClaim?: () => void
   isChoosingPending?: boolean
-  isClaimPending?: boolean
+  claimState?: ClaimState
   showActions?: boolean
 }
+
+const SPRING = { type: 'spring' as const, stiffness: 420, damping: 22 }
 
 export default function CatCard({
   cat,
@@ -25,12 +29,12 @@ export default function CatCard({
   onChoose,
   onClaim,
   isChoosingPending,
-  isClaimPending,
+  claimState = 'idle',
   showActions = false,
 }: Props) {
   const [imgError, setImgError] = useState(false)
   const isMobile = useMediaQuery('(max-width: 768px)')
-  const hasReward = claimable && parseFloat(claimable) > 0
+  const hasReward = Boolean(claimable && parseFloat(claimable) > 0)
 
   return (
     <div
@@ -45,13 +49,21 @@ export default function CatCard({
         '--cat-color': cat.color,
       } as React.CSSProperties}
     >
-      {/* CHOSEN badge */}
+      {/* CHOSEN badge — spring pop on mount */}
       {isSelected && (
-        <div className="absolute -top-px -right-px">
-          <span className="wc-badge wc-badge-green" style={{ borderColor: cat.color, color: cat.color }}>
+        <motion.div
+          className="absolute -top-px -right-px"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={SPRING}
+        >
+          <span
+            className="wc-badge"
+            style={{ borderColor: cat.color, color: cat.color }}
+          >
             CHOSEN
           </span>
-        </div>
+        </motion.div>
       )}
 
       {/* Avatar + info row */}
@@ -59,7 +71,7 @@ export default function CatCard({
         {/* Avatar */}
         <div
           className="cat-img h-12 w-12 shrink-0 overflow-hidden flex items-center justify-center rounded-xl"
-          style={{ border: `1px solid rgba(255,255,255,0.1)`, background: cat.color + '0d' }}
+          style={{ border: '1px solid rgba(255,255,255,0.1)', background: cat.color + '0d' }}
         >
           {imgError ? (
             <CatIcon className="w-6 h-6" style={{ color: cat.color }} />
@@ -83,7 +95,7 @@ export default function CatCard({
             ${cat.ticker}
           </div>
 
-          {/* Weight bar — inside info column */}
+          {/* Weight bar */}
           {weightPct !== undefined && (
             <div>
               <div className="flex justify-between mb-1">
@@ -99,10 +111,10 @@ export default function CatCard({
             </div>
           )}
 
-          {/* Claimable — inside info column */}
+          {/* Claimable amount */}
           {showActions && claimable !== undefined && (
             <div
-              className="mt-2 px-2 py-1.5 text-xs"
+              className="mt-2 px-2 py-1.5 text-xs rounded-md"
               style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
             >
               <span className="text-[9px] font-medium uppercase tracking-wider text-gray-600">Claimable </span>
@@ -119,25 +131,33 @@ export default function CatCard({
           style={isMobile ? { opacity: 1, transform: 'translateY(0)' } : undefined}
         >
           {!isSelected && onChoose && (
-            <button
+            <motion.button
               onClick={onChoose}
               disabled={isChoosingPending}
-              className="btn-choose flex-1 py-1.5 text-[10px] font-bold wc-mono uppercase tracking-wider transition-colors disabled:opacity-50"
-              style={{ background: cat.color + '14', color: cat.color, border: `1px solid ${cat.color}33` }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.96 }}
+              transition={SPRING}
+              className="btn-choose flex-1 py-1.5 text-[10px] font-bold wc-mono uppercase tracking-wider disabled:opacity-50"
+              style={{
+                background: cat.color + '14',
+                color: cat.color,
+                border: `1px solid ${cat.color}33`,
+                borderRadius: '8px',
+              }}
             >
               {isChoosingPending ? 'Choosing…' : 'Choose'}
-            </button>
+            </motion.button>
           )}
 
           {onClaim && (
-            <button
+            <ClaimButton
+              ticker={cat.ticker}
+              catColor={cat.color}
+              claimState={claimState}
+              hasReward={hasReward}
               onClick={onClaim}
-              disabled={isClaimPending || !hasReward}
-              className="btn-claim flex-1 py-1.5 text-[10px] font-black wc-mono uppercase tracking-wider text-black transition-all disabled:opacity-40 hover:scale-[1.02]"
-              style={{ background: '#CCFF00' }}
-            >
-              {isClaimPending ? 'Claiming…' : `Claim ${cat.ticker}`}
-            </button>
+              variant="card"
+            />
           )}
         </div>
       )}
